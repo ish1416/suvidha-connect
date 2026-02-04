@@ -21,6 +21,13 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+
+        <footer className="w-full text-center text-xs text-gray-500 py-3 border-t">
+  Developed by{" "}
+  <span className="font-semibold">
+    YellowSense Technologies Pvt Ltd
+  </span>
+</footer>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
