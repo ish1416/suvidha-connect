@@ -1,18 +1,30 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useKiosk } from '@/context/KioskContext';
 import { useTranslation } from 'react-i18next';
-import { Shield, Globe, LogOut, Clock, User } from 'lucide-react';
+import { Shield, Globe, LogOut, Clock, User, Eye, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const KioskHeader: React.FC = () => {
   const { isAuthenticated, citizen, language, setLanguage, logout, sessionTimeout } = useAuth();
+  const { ttsEnabled, toggleTTS } = useKiosk();
   const { t, i18n } = useTranslation();
+  const [highContrast, setHighContrast] = useState(false);
 
   // Sync i18n language with AuthContext language
   useEffect(() => {
     i18n.changeLanguage(language);
   }, [language, i18n]);
+
+  // Toggle high contrast class on body
+  useEffect(() => {
+    if (highContrast) {
+      document.body.classList.add('high-contrast');
+    } else {
+      document.body.classList.remove('high-contrast');
+    }
+  }, [highContrast]);
 
   const formatTime = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
@@ -65,6 +77,38 @@ const KioskHeader: React.FC = () => {
 
         {/* Right: Language, User, Logout */}
         <div className="flex items-center gap-4">
+          {/* TTS Toggle */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleTTS}
+            className={`text-primary-foreground hover:bg-primary-foreground/10 gap-2 ${
+              ttsEnabled ? 'bg-primary-foreground/20 ring-2 ring-primary-foreground' : ''
+            }`}
+            aria-label={ttsEnabled ? 'Disable Text-to-Speech' : 'Enable Text-to-Speech'}
+          >
+            {ttsEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            <span className="hidden sm:inline">
+              {ttsEnabled ? 'TTS On' : 'TTS Off'}
+            </span>
+          </Button>
+
+          {/* High Contrast Toggle */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setHighContrast(!highContrast)}
+            className={`text-primary-foreground hover:bg-primary-foreground/10 gap-2 ${
+              highContrast ? 'bg-primary-foreground/20 ring-2 ring-primary-foreground' : ''
+            }`}
+            aria-label={highContrast ? 'Disable High Contrast' : 'Enable High Contrast'}
+          >
+            <Eye className="w-4 h-4" />
+            <span className="hidden sm:inline">
+              {highContrast ? 'Normal' : 'High Contrast'}
+            </span>
+          </Button>
+
           {/* Language Toggle */}
           <Button
             variant="ghost"

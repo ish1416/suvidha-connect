@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   bills as initialBills, 
   complaints as initialComplaints, 
@@ -41,15 +42,53 @@ interface KioskContextType {
   
   // Integrity
   verifyIntegrity: (recordId: string) => boolean;
+
+  // TTS
+  ttsEnabled: boolean;
+  toggleTTS: () => void;
+  speak: (text: string) => void;
 }
 
 const KioskContext = createContext<KioskContextType | undefined>(undefined);
 
 export const KioskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { i18n } = useTranslation();
   const [bills, setBills] = useState<Bill[]>(initialBills);
   const [complaints, setComplaints] = useState<Complaint[]>(initialComplaints);
   const [serviceRequests, setServiceRequests] = useState<ServiceRequest[]>(initialRequests);
   const [integrityRecords, setIntegrityRecords] = useState<IntegrityRecord[]>(initialRecords);
+  
+  // TTS State
+  const [ttsEnabled, setTtsEnabled] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  const speak = useCallback((text: string) => {
+    if (!ttsEnabled) return;
+    
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    const langMap: Record<string, string> = {
+      'en': 'en-IN',
+      'hi': 'hi-IN'
+    };
+    utterance.lang = langMap[i18n.language] || 'en-US';
+    
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    
+    window.speechSynthesis.speak(utterance);
+  }, [ttsEnabled, i18n.language]);
+
+  const toggleTTS = useCallback(() => {
+    setTtsEnabled(prev => {
+      if (prev) {
+        window.speechSynthesis.cancel();
+      }
+      return !prev;
+    });
+  }, []);
 
   const payBill = async (billId: string, method: string): Promise<PaymentResult> => {
     await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate payment processing
@@ -201,7 +240,10 @@ export const KioskProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         submitServiceRequest,
         getComplaintStatus,
         getRequestStatus,
-        verifyIntegrity
+        verifyIntegrity,
+        ttsEnabled,
+        toggleTTS,
+        speak
       }}
     >
       {children}

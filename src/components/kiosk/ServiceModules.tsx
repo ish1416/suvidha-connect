@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useKiosk } from '@/context/KioskContext';
 import { 
   CreditCard, 
   MessageSquareWarning, 
@@ -11,9 +12,11 @@ import {
   Zap,
   Flame,
   Droplets,
-  Trash2
+  Trash2,
+  Volume2
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 interface ServiceModulesProps {
   onModuleSelect: (module: string) => void;
@@ -21,6 +24,7 @@ interface ServiceModulesProps {
 
 const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
   const { t } = useTranslation();
+  const { speak, ttsEnabled } = useKiosk();
 
   const modules = [
     {
@@ -121,6 +125,21 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
               </div>
               <h3 className="text-xl font-bold mb-2">{module.title}</h3>
               <p className="text-sm opacity-90">{module.description}</p>
+              
+              {ttsEnabled && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-4 hover:bg-background/20"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    speak(`${module.title}. ${module.description}`);
+                  }}
+                >
+                  <Volume2 className="w-4 h-4 mr-2" />
+                  {t('Speak')}
+                </Button>
+              )}
             </CardContent>
           </Card>
         ))}
