@@ -1,73 +1,80 @@
-# Welcome to your Lovable project
+# SUVIDHA Connect – Smart Civic Services Kiosk (Hackathon Prototype)
 
-## Project info
+SUVIDHA Connect is a Smart Urban Virtual Interactive Digital Helpdesk Assistant (SUVIDHA) prototype built for Indian civic utility offices.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This unified kiosk enables citizens to securely access essential services such as:
 
-## How can I edit this code?
+- Electricity bill payment
+- Gas distribution services (Assam Gas focus)
+- Water and municipal grievance support
+- Complaint registration and tracking
+- Service request applications
+- Admin monitoring dashboard
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🚀 Live Demo
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Deployed on Vercel:
 
-Changes made via Lovable will be committed automatically to this repo.
+https://suvidha-connect.vercel.app
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🛠 Tech Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- React + Vite + TailwindCSS  
+- Node-ready modular architecture  
+- OTP-based mock authentication  
+- Admin dashboard + civic alerts  
+- DPDP Act compliant privacy-first design  
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## ✨ Key Modules
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- Citizen Authentication (OTP / Consumer ID / QR placeholder)
+- Utility Bill Payment + Receipt Download
+- Complaint & Grievance Registration
+- New Connection Request Workflow
+- Status Tracking Timeline
+- Emergency Alerts Ticker
+- Admin Analytics + Audit Logs
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 🔐 Cybersecurity & Resilience Highlights
+
+- Secure kiosk session timeout
+- Fraud-prevention controls (rate limiting design)
+- Integrity Ledger for complaint/payment hashes
+- AI-driven anomaly monitoring (demo module)
+
+---
+
+## 🏢 Developed By
+
+**YellowSense Technologies Pvt Ltd**  
+Hackathon Prototype – 2026
+
+---
+
+## ⚙️ Run Locally
+
+```bash
+npm install
 npm run dev
-```
 
-**Edit a file directly in GitHub**
+Build:
+npm run build
+npm run preview
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+# ✅ Step 3 — Commit and Push
 
-**Use GitHub Codespaces**
+Run:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```bash
+git add README.md
+git commit -m "Update README for SUVIDHA hackathon branding"
+git push origin main
