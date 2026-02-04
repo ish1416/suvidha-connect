@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import { 
   CreditCard, 
   MessageSquareWarning, 
@@ -19,51 +20,58 @@ interface ServiceModulesProps {
 }
 
 const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
-  const { language } = useAuth();
+  const { t } = useTranslation();
 
   const modules = [
     {
       id: 'bills',
       icon: CreditCard,
-      title: { en: 'Pay Utility Bill', hi: 'उपयोगिता बिल भुगतान' },
-      description: { en: 'Electricity, Gas & Water', hi: 'बिजली, गैस और पानी' },
+      title: t('services.bills.title'),
+      description: t('services.bills.description'),
       color: 'primary',
       subIcons: [Zap, Flame, Droplets]
     },
     {
       id: 'complaint',
       icon: MessageSquareWarning,
-      title: { en: 'Register Complaint', hi: 'शिकायत दर्ज करें' },
-      description: { en: 'Report issues & grievances', hi: 'समस्याएं और शिकायतें दर्ज करें' },
+      title: t('services.complaint.title'),
+      description: t('services.complaint.description'),
       color: 'secondary'
     },
     {
       id: 'newService',
       icon: FilePlus,
-      title: { en: 'New Service Request', hi: 'नई सेवा अनुरोध' },
-      description: { en: 'Apply for new connections', hi: 'नए कनेक्शन के लिए आवेदन करें' },
+      title: t('services.newService.title'),
+      description: t('services.newService.description'),
       color: 'accent'
     },
     {
       id: 'track',
       icon: Search,
-      title: { en: 'Track Application', hi: 'आवेदन ट्रैक करें' },
-      description: { en: 'Check status of your requests', hi: 'अपने अनुरोधों की स्थिति जांचें' },
+      title: t('services.track.title'),
+      description: t('services.track.description'),
       color: 'primary'
     },
     {
       id: 'documents',
       icon: FileDown,
-      title: { en: 'Download Documents', hi: 'दस्तावेज़ डाउनलोड करें' },
-      description: { en: 'Receipts & certificates', hi: 'रसीदें और प्रमाण पत्र' },
+      title: t('services.documents.title'),
+      description: t('services.documents.description'),
       color: 'secondary'
     },
     {
       id: 'alerts',
       icon: Bell,
-      title: { en: 'Civic Alerts', hi: 'नागरिक अलर्ट' },
-      description: { en: 'Emergency & maintenance notices', hi: 'आपातकालीन और रखरखाव सूचनाएं' },
+      title: t('services.alerts.title'),
+      description: t('services.alerts.description'),
       color: 'accent'
+    },
+    {
+      id: 'waste',
+      icon: Trash2,
+      title: t('services.waste.title'),
+      description: t('services.waste.description'),
+      color: 'primary'
     }
   ];
 
@@ -85,58 +93,37 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
       {/* Welcome Message */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-foreground mb-2">
-          {language === 'en' ? 'Welcome to SUVIDHA Services' : 'सुविधा सेवाओं में आपका स्वागत है'}
+          {t('welcome_title')}
         </h2>
         <p className="text-lg text-muted-foreground">
-          {language === 'en' 
-            ? 'Select a service to continue'
-            : 'जारी रखने के लिए एक सेवा चुनें'}
+          {t('welcome_subtitle')}
         </p>
       </div>
 
       {/* Service Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
         {modules.map((module) => (
-          <Card
+          <Card 
             key={module.id}
-            className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl border-2 border-transparent hover:border-primary/30 overflow-hidden group"
+            className={`cursor-pointer transition-all duration-300 hover:scale-105 border-0 shadow-xl ${getColorClasses(module.color)}`}
             onClick={() => onModuleSelect(module.id)}
           >
-            <CardContent className="p-0">
-              <div className={`${getColorClasses(module.color)} p-6 transition-all`}>
-                <module.icon className="w-12 h-12 mx-auto mb-2" />
-              </div>
-              <div className="p-6 text-center">
-                <h3 className="text-xl font-semibold mb-2">
-                  {module.title[language]}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {module.description[language]}
-                </p>
+            <CardContent className="p-6 flex flex-col items-center text-center h-full justify-center min-h-[200px]">
+              <div className="mb-4 relative">
+                <module.icon className="w-16 h-16" />
                 {module.subIcons && (
-                  <div className="flex justify-center gap-3 mt-4">
-                    {module.subIcons.map((Icon, idx) => (
-                      <div key={idx} className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                        <Icon className="w-4 h-4 text-muted-foreground" />
-                      </div>
+                  <div className="flex gap-1 absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-background/20 backdrop-blur-sm rounded-full px-2 py-0.5">
+                    {module.subIcons.map((SubIcon, index) => (
+                      <SubIcon key={index} className="w-4 h-4" />
                     ))}
                   </div>
                 )}
               </div>
+              <h3 className="text-xl font-bold mb-2">{module.title}</h3>
+              <p className="text-sm opacity-90">{module.description}</p>
             </CardContent>
           </Card>
         ))}
-      </div>
-
-      {/* Quick Info */}
-      <div className="mt-12 text-center">
-        <div className="inline-flex items-center gap-4 px-6 py-3 bg-muted rounded-full text-sm text-muted-foreground">
-          <span>🔒 {language === 'en' ? 'Secure & Encrypted' : 'सुरक्षित और एन्क्रिप्टेड'}</span>
-          <span>•</span>
-          <span>📞 {language === 'en' ? 'Helpline: 1800-XXX-XXXX' : 'हेल्पलाइन: 1800-XXX-XXXX'}</span>
-          <span>•</span>
-          <span>🕐 {language === 'en' ? '24/7 Available' : '24/7 उपलब्ध'}</span>
-        </div>
       </div>
     </div>
   );

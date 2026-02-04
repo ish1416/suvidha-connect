@@ -1,0 +1,42 @@
+
+{
+  "welcome_title": "Welcome to SUVIDHA Services",
+  "welcome_subtitle": "Select a service to continue",
+  "services": {
+    "bills": {
+      "title": "Pay Utility Bill",
+      "description": "Electricity, Gas & Water"
+    },
+    "complaint": {
+      "title": "Register Complaint",
+      "description": "Report issues & grievances"
+    },
+    "newService": {
+      "title": "New Service Request",
+      "description": "Apply for new connections"
+    },
+    "track": {
+      "title": "Track Application",
+      "description": "Check status of your requests"
+    },
+    "documents": {
+      "title": "Download Documents",
+      "description": "Receipts & certificates"
+    },
+    "alerts": {
+      "title": "Civic Alerts",
+      "description": "Emergency & maintenance notices"
+    },
+    "waste": {
+        "title": "Waste Management",
+        "description": "Schedule pickup & pay fees"
+    }
+  },
+  "header": {
+      "title": "SUVIDHA",
+      "subtitle": "Smart Urban Virtual Interactive Digital Helpdesk Assistant",
+      "login": "Login",
+      "admin": "Admin",
+      "logout": "Logout"
+  }
+}

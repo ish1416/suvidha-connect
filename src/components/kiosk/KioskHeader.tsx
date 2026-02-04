@@ -1,10 +1,18 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import { Shield, Globe, LogOut, Clock, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const KioskHeader: React.FC = () => {
   const { isAuthenticated, citizen, language, setLanguage, logout, sessionTimeout } = useAuth();
+  const { t, i18n } = useTranslation();
+
+  // Sync i18n language with AuthContext language
+  useEffect(() => {
+    i18n.changeLanguage(language);
+  }, [language, i18n]);
 
   const formatTime = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
@@ -23,12 +31,10 @@ const KioskHeader: React.FC = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold text-primary-foreground tracking-wide">
-                SUVIDHA
+                {t('header.title')}
               </h1>
               <p className="text-xs text-primary-foreground/80">
-                {language === 'en' 
-                  ? 'Smart Urban Virtual Interactive Digital Helpdesk Assistant'
-                  : 'स्मार्ट शहरी वर्चुअल इंटरैक्टिव डिजिटल हेल्पडेस्क असिस्टेंट'}
+                {t('header.subtitle')}
               </p>
             </div>
           </div>
@@ -92,7 +98,7 @@ const KioskHeader: React.FC = () => {
                 className="gap-2"
               >
                 <LogOut className="w-4 h-4" />
-                {language === 'en' ? 'Logout' : 'लॉगआउट'}
+                {t('header.logout')}
               </Button>
             </>
           )}
