@@ -10,6 +10,7 @@ import {
   Calendar, Receipt, History
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface BillPaymentModuleProps {
   onBack: () => void;
@@ -160,6 +161,18 @@ const BillPaymentModule: React.FC<BillPaymentModuleProps> = ({ onBack }) => {
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Service</span>
                 <span>{selectedBillData ? getTypeLabel(selectedBillData.type) : ''}</span>
+              </div>
+            </div>
+
+            <div className="flex justify-center mb-6">
+              <div className="p-4 bg-white rounded-lg border shadow-sm">
+                <QRCodeSVG 
+                  value={JSON.stringify(paymentComplete)} 
+                  size={180} 
+                  level="H"
+                  includeMargin={true}
+                />
+                <p className="text-xs text-center mt-2 text-black font-medium">Scan to Download Receipt</p>
               </div>
             </div>
 

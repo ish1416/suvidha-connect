@@ -1,4 +1,3 @@
-
 {
   "welcome_title": "Welcome to SUVIDHA Services",
   "welcome_subtitle": "Select a service to continue",
@@ -39,5 +38,15 @@
       "admin": "Admin",
       "logout": "Logout"
   },
+  "waste": {
+    "schedule": "Schedule Pickup",
+    "pay_fee": "Pay Fees",
+    "schedule_success": "Pickup Scheduled Successfully!",
+    "payment_success": "Payment Successful!"
+  },
+  "voice_error": "Voice command failed. Try again.",
+  "success": "Success!",
+  "back": "Back",
+  "home": "Home",
   "Speak": "Speak"
 }

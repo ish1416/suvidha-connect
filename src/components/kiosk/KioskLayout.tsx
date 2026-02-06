@@ -9,9 +9,11 @@ import NewServiceModule from './NewServiceModule';
 import TrackStatusModule from './TrackStatusModule';
 import DocumentsModule from './DocumentsModule';
 import AlertsModule from './AlertsModule';
+import WasteModule from './WasteModule';
+import VoiceCommander from './VoiceCommander';
 import { useAuth } from '@/context/AuthContext';
 
-type ModuleType = 'home' | 'bills' | 'complaint' | 'newService' | 'track' | 'documents' | 'alerts';
+type ModuleType = 'home' | 'bills' | 'complaint' | 'newService' | 'track' | 'documents' | 'alerts' | 'waste';
 
 const KioskLayout: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -43,6 +45,8 @@ const KioskLayout: React.FC = () => {
         return <DocumentsModule onBack={handleBack} />;
       case 'alerts':
         return <AlertsModule onBack={handleBack} />;
+      case 'waste':
+        return <WasteModule onBack={handleBack} />;
       default:
         return <ServiceModules onModuleSelect={handleModuleSelect} />;
     }
@@ -52,6 +56,7 @@ const KioskLayout: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <KioskHeader />
       <AlertTicker />
+      <VoiceCommander onNavigate={handleModuleSelect} />
       <main className="flex-1 overflow-auto">
         {renderModule()}
       </main>
