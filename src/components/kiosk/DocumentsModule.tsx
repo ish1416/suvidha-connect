@@ -8,6 +8,7 @@ import {
   Zap, Flame, Droplets, Calendar, CheckCircle
 } from 'lucide-react';
 import { toast } from 'sonner';
+import jsPDF from 'jspdf';
 
 interface DocumentsModuleProps {
   onBack: () => void;
@@ -85,11 +86,28 @@ const DocumentsModule: React.FC<DocumentsModuleProps> = ({ onBack }) => {
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const handleDownload = (type: string, id?: string) => {
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text(`SUVIDHA ${type.toUpperCase()}`, 105, 20, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text(`Document ID: ${id || 'DOC-' + Math.floor(Math.random() * 10000)}`, 20, 40);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 50);
+    doc.text('This is a certified document from the SUVIDHA Smart City Portal.', 20, 70);
+    doc.save(`${type.replace(/\s+/g, '_')}.pdf`);
     toast.success(language === 'en' ? `Downloading ${type}...` : `${type} डाउनलोड हो रहा है...`);
   };
 
   const handlePrint = (type: string) => {
-    toast.success(language === 'en' ? `Printing ${type}...` : `${type} प्रिंट हो रहा है...`);
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text(`SUVIDHA ${type.toUpperCase()}`, 105, 20, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text('PRINT PREVIEW', 105, 30, { align: 'center' });
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 50);
+    doc.text('This is a certified document.', 20, 70);
+    doc.autoPrint();
+    window.open(doc.output('bloburl'), '_blank');
+    toast.success(language === 'en' ? `Opening Print Preview for ${type}...` : `${type} प्रिंट प्रीव्यू खुल रहा है...`);
   };
 
   const certificates = [
