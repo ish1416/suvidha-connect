@@ -1,10 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { civicAlerts } from '@/lib/mockData';
+import { civicAlerts, type CivicAlert } from '@/lib/mockData';
 import { AlertTriangle, Info, CloudRain, Wrench } from 'lucide-react';
 
 const AlertTicker: React.FC = () => {
   const { language } = useAuth();
+  const [alerts, setAlerts] = useState<CivicAlert[]>(civicAlerts);
+
+  // Simulate real-time data streaming
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const newAlert: CivicAlert = {
+        id: `ALERT_LIVE_${Date.now()}`,
+        type: 'emergency',
+        title: 'Flash Flood Alert',
+        titleHindi: 'बाढ़ की चेतावनी',
+        message: 'Heavy rain expected in Sector 62. Avoid low lying areas.',
+        messageHindi: 'सेक्टर 62 में भारी बारिश की संभावना। निचले इलाकों से बचें।',
+        severity: 'critical',
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 3600000).toISOString(),
+        zones: ['Zone 1']
+      };
+      setAlerts(prev => [newAlert, ...prev]);
+    }, 5000); // Add after 5 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -32,7 +54,7 @@ const AlertTicker: React.FC = () => {
     }
   };
 
-  const activeAlerts = civicAlerts.filter(
+  const activeAlerts = alerts.filter(
     alert => new Date(alert.expiresAt) > new Date()
   );
 
