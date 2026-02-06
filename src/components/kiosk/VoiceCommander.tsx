@@ -136,7 +136,7 @@ const VoiceCommander: React.FC<VoiceCommanderProps> = ({ onNavigate }) => {
   if (!recognition) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+    <div className="fixed bottom-6 right-24 z-50 flex flex-col items-end gap-2">
       {/* Listening Feedback Card */}
       {isListening && (
         <div className="bg-black/80 backdrop-blur-md text-white p-4 rounded-xl shadow-2xl mb-2 animate-in slide-in-from-bottom-5 fade-in duration-300 max-w-xs border border-white/10">

@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   ArrowLeft, Download, Receipt, FileText, 
-  Zap, Flame, Droplets, Calendar, CheckCircle
+  Zap, Flame, Droplets, Calendar, CheckCircle,
+  Scan, Camera, Loader2
 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 
@@ -17,11 +19,18 @@ interface DocumentsModuleProps {
 const DocumentsModule: React.FC<DocumentsModuleProps> = ({ onBack }) => {
   const { language, citizen } = useAuth();
   const { bills } = useKiosk();
+  const [isScanning, setIsScanning] = React.useState(false);
+  const [scanProgress, setScanProgress] = React.useState(0);
 
   const t = {
     en: {
       title: 'Download Documents',
       subtitle: 'Access your receipts and certificates',
+      digitizeDocs: 'Digitize Documents',
+      digitizeDesc: 'Scan physical documents to save them digitally',
+      scanNow: 'Scan Now',
+      scanning: 'Scanning...',
+      scanComplete: 'Scan Complete',
       paymentReceipts: 'Payment Receipts',
       noReceipts: 'No receipts available',
       certificates: 'Certificates',
@@ -40,6 +49,11 @@ const DocumentsModule: React.FC<DocumentsModuleProps> = ({ onBack }) => {
     hi: {
       title: 'दस्तावेज़ डाउनलोड करें',
       subtitle: 'अपनी रसीदें और प्रमाण पत्र एक्सेस करें',
+      digitizeDocs: 'दस्तावेज़ डिजिटाइज़ करें',
+      digitizeDesc: 'भौतिक दस्तावेज़ों को डिजिटल रूप से सहेजने के लिए स्कैन करें',
+      scanNow: 'अभी स्कैन करें',
+      scanning: 'स्कैनिंग...',
+      scanComplete: 'स्कैन पूर्ण',
       paymentReceipts: 'भुगतान रसीदें',
       noReceipts: 'कोई रसीदें उपलब्ध नहीं',
       certificates: 'प्रमाण पत्र',
@@ -84,6 +98,26 @@ const DocumentsModule: React.FC<DocumentsModuleProps> = ({ onBack }) => {
       type: bill.type
     }))
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  const handleScan = () => {
+    setIsScanning(true);
+    setScanProgress(0);
+    
+    // Simulate scanning progress
+    const interval = setInterval(() => {
+      setScanProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            setIsScanning(false);
+            toast.success(text.scanComplete);
+          }, 500);
+          return 100;
+        }
+        return prev + 5;
+      });
+    }, 100);
+  };
 
   const handleDownload = (type: string, id?: string) => {
     const doc = new jsPDF();
@@ -140,46 +174,104 @@ const DocumentsModule: React.FC<DocumentsModuleProps> = ({ onBack }) => {
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-        {/* Payment Receipts */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Receipt className="w-5 h-5 text-primary" />
-              {text.paymentReceipts}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {allPayments.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">{text.noReceipts}</p>
-            ) : (
-              allPayments.slice(0, 5).map((payment, idx) => {
-                const Icon = getIcon(payment.type);
-                return (
-                  <div key={idx} className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      payment.type === 'electricity' ? 'bg-yellow-100 text-yellow-600' :
-                      payment.type === 'gas' ? 'bg-orange-100 text-orange-600' :
-                      'bg-blue-100 text-blue-600'
-                    }`}>
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium">{getTypeLabel(payment.type)}</p>
-                      <p className="text-xs text-muted-foreground font-mono">{payment.transactionId}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold">₹{payment.amount.toLocaleString('en-IN')}</p>
-                      <p className="text-xs text-muted-foreground">{payment.date}</p>
-                    </div>
-                    <Button size="icon" variant="ghost" onClick={() => handleDownload('Receipt', payment.transactionId)}>
-                      <Download className="w-4 h-4" />
-                    </Button>
+        {/* Left Column */}
+        <div className="space-y-6">
+          {/* Digitize Documents (New Feature) */}
+          <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-blue-800">
+                <Scan className="w-5 h-5" />
+                {text.digitizeDocs}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-blue-600 mb-4">{text.digitizeDesc}</p>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="w-full gap-2 bg-blue-600 hover:bg-blue-700">
+                    <Camera className="w-4 h-4" />
+                    {text.scanNow}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>{text.digitizeDocs}</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex flex-col items-center justify-center p-6 gap-4">
+                    {!isScanning ? (
+                      <div className="w-full aspect-video bg-black rounded-lg relative overflow-hidden flex items-center justify-center group cursor-pointer" onClick={handleScan}>
+                        <div className="text-white/50 flex flex-col items-center gap-2 group-hover:text-white transition-colors">
+                          <Camera className="w-12 h-12" />
+                          <span className="text-sm">Tap to Capture</span>
+                        </div>
+                        {/* Corner markers */}
+                        <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-white/50" />
+                        <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-white/50" />
+                        <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-white/50" />
+                        <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-white/50" />
+                      </div>
+                    ) : (
+                      <div className="w-full aspect-video bg-black rounded-lg relative overflow-hidden flex items-center justify-center">
+                        {/* Scanning animation */}
+                        <div className="absolute top-0 left-0 w-full h-1 bg-green-500 shadow-[0_0_15px_rgba(34,197,94,0.8)] animate-[scan_2s_ease-in-out_infinite]" />
+                        <div className="text-green-400 flex flex-col items-center gap-2">
+                          <Loader2 className="w-8 h-8 animate-spin" />
+                          <span className="text-sm font-mono">{scanProgress}%</span>
+                        </div>
+                        {/* Grid overlay */}
+                        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,0,0.1)_1px,transparent_1px)] bg-[size:20px_20px]" />
+                      </div>
+                    )}
+                    <p className="text-sm text-muted-foreground text-center">
+                      {isScanning ? text.scanning : 'Place your document within the frame'}
+                    </p>
                   </div>
-                );
-              })
-            )}
-          </CardContent>
-        </Card>
+                </DialogContent>
+              </Dialog>
+            </CardContent>
+          </Card>
+
+          {/* Payment Receipts */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Receipt className="w-5 h-5 text-primary" />
+                {text.paymentReceipts}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {allPayments.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">{text.noReceipts}</p>
+              ) : (
+                allPayments.slice(0, 5).map((payment, idx) => {
+                  const Icon = getIcon(payment.type);
+                  return (
+                    <div key={idx} className="flex items-center gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        payment.type === 'electricity' ? 'bg-yellow-100 text-yellow-600' :
+                        payment.type === 'gas' ? 'bg-orange-100 text-orange-600' :
+                        'bg-blue-100 text-blue-600'
+                      }`}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium">{getTypeLabel(payment.type)}</p>
+                        <p className="text-xs text-muted-foreground font-mono">{payment.transactionId}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold">₹{payment.amount.toLocaleString('en-IN')}</p>
+                        <p className="text-xs text-muted-foreground">{payment.date}</p>
+                      </div>
+                      <Button size="icon" variant="ghost" onClick={() => handleDownload('Receipt', payment.transactionId)}>
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  );
+                })
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Certificates */}
         <div className="space-y-6">

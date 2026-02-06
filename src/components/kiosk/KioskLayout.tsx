@@ -12,6 +12,7 @@ import DocumentsModule from './DocumentsModule';
 import AlertsModule from './AlertsModule';
 import WasteModule from './WasteModule';
 import VoiceCommander from './VoiceCommander';
+import ChatAssistant from './ChatAssistant';
 import { useAuth } from '@/context/AuthContext';
 
 type ModuleType = 'home' | 'bills' | 'complaint' | 'newService' | 'track' | 'documents' | 'alerts' | 'waste';
@@ -91,6 +92,7 @@ const KioskLayout: React.FC = () => {
       <KioskHeader />
       <AlertTicker />
       <VoiceCommander onNavigate={handleModuleSelect} />
+      <ChatAssistant onNavigate={handleModuleSelect} />
       <main className="flex-1 overflow-auto">
         {renderModule()}
       </main>
