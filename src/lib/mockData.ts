@@ -236,6 +236,18 @@ export const civicAlerts: CivicAlert[] = [
     createdAt: '2026-02-02T14:00:00Z',
     expiresAt: '2026-02-03T14:00:00Z',
     zones: ['Sector 12']
+  },
+  {
+    id: 'ALERT004',
+    type: 'emergency',
+    title: 'Flash Flood Warning',
+    titleHindi: 'अचानक बाढ़ की चेतावनी',
+    message: 'CRITICAL: Flash floods reported in low-lying areas. Evacuate immediately to higher ground.',
+    messageHindi: 'गंभीर: निचले इलाकों में अचानक बाढ़ की खबर है। तुरंत ऊंचे स्थानों पर जाएं।',
+    severity: 'critical',
+    createdAt: '2026-02-06T00:00:00Z',
+    expiresAt: '2026-02-07T00:00:00Z',
+    zones: ['Low-lying Areas']
   }
 ];
 
