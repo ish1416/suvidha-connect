@@ -53,9 +53,9 @@ const AlertTicker: React.FC = () => {
       case 'warning':
         return 'bg-yellow-500 text-black border-2 border-yellow-600 font-semibold';
       case 'maintenance':
-        return 'bg-orange-500 text-white';
+        return 'bg-secondary text-secondary-foreground';
       default:
-        return 'bg-blue-600 text-white';
+        return 'bg-primary text-primary-foreground';
     }
   };
 
@@ -75,12 +75,12 @@ const AlertTicker: React.FC = () => {
 
   // Determine global severity for the ticker bar background
   const hasCritical = activeAlerts.some(a => a.severity === 'critical');
-  const tickerBg = hasCritical ? 'bg-red-950/90 border-b border-red-500' : 'bg-slate-900/90 border-b border-slate-700';
+  const tickerBg = hasCritical ? 'bg-red-950/90 border-b border-red-500' : 'bg-primary/95 border-b border-primary-foreground/20';
 
   return (
-    <div className={`alert-ticker overflow-hidden sticky top-16 z-40 backdrop-blur-sm ${tickerBg}`}>
+    <div className={`alert-ticker overflow-hidden sticky top-16 z-40 backdrop-blur-sm ${tickerBg} text-white shadow-md`}>
       <div className="flex items-center gap-3 px-4 py-3">
-        <span className={`text-xs font-bold uppercase tracking-wider shrink-0 px-2 py-1 rounded ${hasCritical ? 'bg-red-600 text-white animate-bounce' : 'bg-primary text-primary-foreground'}`}>
+        <span className={`text-xs font-bold uppercase tracking-wider shrink-0 px-2 py-1 rounded ${hasCritical ? 'bg-red-600 text-white animate-bounce' : 'bg-white/20 text-white'}`}>
           {language === 'en' ? '📢 ALERTS' : '📢 अलर्ट'}
         </span>
         <div className="overflow-hidden flex-1 group">
@@ -127,7 +127,7 @@ const AlertTicker: React.FC = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              className={`shrink-0 h-7 text-xs font-medium ml-2 border-l pl-3 hover:bg-white/10 ${hasCritical ? 'text-white border-red-400' : 'text-slate-200 border-slate-600'}`}
+              className={`shrink-0 h-7 text-xs font-medium ml-2 border-l pl-3 hover:bg-white/10 ${hasCritical ? 'text-white border-red-400' : 'text-white/90 border-white/30'}`}
             >
               {language === 'en' ? 'View All' : 'सभी देखें'}
               <ChevronRight className="w-3 h-3 ml-1" />

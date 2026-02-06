@@ -124,49 +124,66 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center p-8">
-      <Card className="w-full max-w-lg shadow-xl border-2 border-primary/20">
-        <CardHeader className="text-center space-y-2 pb-6">
-          <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-            <Shield className="w-8 h-8 text-primary" />
+    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center p-8 bg-muted/30 relative overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute inset-0 z-0 opacity-5">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-primary rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+      </div>
+
+      <Card className="w-full max-w-lg shadow-2xl border-0 ring-1 ring-black/5 z-10 bg-white/80 backdrop-blur-xl">
+        {/* Tricolor Branding Bar */}
+        <div className="h-2 w-full bg-[linear-gradient(90deg,#FF9933_0%,#FFFFFF_50%,#138808_100%)]" />
+        <CardHeader className="text-center space-y-2 pb-6 pt-8">
+          <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-primary to-blue-800 flex items-center justify-center mb-4 shadow-lg ring-4 ring-white">
+            <Shield className="w-10 h-10 text-white" />
           </div>
-          <CardTitle className="text-2xl">{text.title}</CardTitle>
-          <CardDescription className="text-base">{text.subtitle}</CardDescription>
+          <div className="space-y-1">
+            <h2 className="text-xs font-bold text-primary uppercase tracking-[0.2em]">
+              {language === 'en' ? 'Government of India' : 'भारत सरकार'}
+            </h2>
+            <CardTitle className="text-3xl font-serif text-slate-800">
+              {text.title}
+            </CardTitle>
+          </div>
+          <CardDescription className="text-base font-medium text-slate-500 max-w-xs mx-auto">
+            {text.subtitle}
+          </CardDescription>
         </CardHeader>
         
-        <CardContent>
+        <CardContent className="px-8 pb-8">
           <Tabs defaultValue="mobile" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6">
-              <TabsTrigger value="mobile" className="gap-2 text-sm">
+            <TabsList className="grid w-full grid-cols-3 mb-8 p-1 bg-slate-100/80 rounded-xl">
+              <TabsTrigger value="mobile" className="gap-2 text-sm py-2.5 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
                 <Smartphone className="w-4 h-4" />
                 {text.mobileTab}
               </TabsTrigger>
-              <TabsTrigger value="consumer" className="gap-2 text-sm">
+              <TabsTrigger value="consumer" className="gap-2 text-sm py-2.5 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
                 <CreditCard className="w-4 h-4" />
                 {text.consumerTab}
               </TabsTrigger>
-              <TabsTrigger value="qr" className="gap-2 text-sm">
+              <TabsTrigger value="qr" className="gap-2 text-sm py-2.5 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
                 <QrCode className="w-4 h-4" />
                 {text.qrTab}
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="mobile" className="space-y-4">
+            <TabsContent value="mobile" className="space-y-5 animate-in slide-in-from-bottom-2 duration-300">
               <div className="space-y-2">
-                <label className="text-sm font-medium">{text.mobileNumber}</label>
+                <label className="text-sm font-semibold text-slate-700 ml-1">{text.mobileNumber}</label>
                 <Input
                   type="tel"
                   placeholder={text.enterMobile}
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                  className="text-lg h-14"
+                  className="text-lg h-14 bg-white border-slate-200 focus:border-primary focus:ring-primary/20 transition-all rounded-xl"
                   disabled={otpSent}
                 />
               </div>
               
               {!otpSent ? (
                 <Button 
-                  className="w-full h-14 text-lg"
+                  className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-900/20 rounded-xl transition-all hover:scale-[1.01]"
                   onClick={handleSendOTP}
                   disabled={loading || mobile.length !== 10}
                 >
@@ -175,22 +192,22 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
                 </Button>
               ) : (
                 <>
-                  <div className="flex items-center gap-2 text-accent p-3 bg-accent/10 rounded-lg">
-                    <CheckCircle className="w-5 h-5" />
-                    <span className="text-sm">{text.otpSent}</span>
+                  <div className="flex items-center gap-3 text-green-700 p-4 bg-green-50 rounded-xl border border-green-100">
+                    <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                    <span className="text-sm font-medium">{text.otpSent}</span>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">{text.enterOtp}</label>
+                    <label className="text-sm font-semibold text-slate-700 ml-1">{text.enterOtp}</label>
                     <Input
                       type="password"
                       placeholder="••••••"
                       value={otp}
                       onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                      className="text-lg h-14 text-center tracking-widest font-mono"
+                      className="text-lg h-14 text-center tracking-[0.5em] font-mono bg-white border-slate-200 focus:border-primary focus:ring-primary/20 transition-all rounded-xl"
                     />
                   </div>
                   <Button 
-                    className="w-full h-14 text-lg"
+                    className="w-full h-14 text-lg font-semibold bg-green-600 hover:bg-green-700 shadow-lg shadow-green-900/20 rounded-xl transition-all hover:scale-[1.01]"
                     onClick={handleOTPLogin}
                     disabled={loading || otp.length !== 6}
                   >

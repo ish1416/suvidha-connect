@@ -33,38 +33,41 @@ const KioskHeader: React.FC = () => {
   };
 
   return (
-    <header className="kiosk-header">
-      <div className="flex items-center justify-between px-6 py-4">
+    <header className="kiosk-header relative shadow-lg z-50">
+      {/* Decorative Top Border (Tricolor) */}
+      <div className="h-1.5 w-full bg-[linear-gradient(90deg,#FF9933_0%,#FFFFFF_50%,#138808_100%)]" />
+      
+      <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-primary via-blue-800 to-primary text-white">
         {/* Left: Government Branding */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-              <Shield className="w-8 h-8 text-primary-foreground" />
+            <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
+              <Shield className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-primary-foreground tracking-wide">
+              <h1 className="text-2xl font-bold text-white tracking-wide font-serif">
                 {t('header.title')}
               </h1>
-              <p className="text-xs text-primary-foreground/80">
+              <p className="text-xs text-blue-100 uppercase tracking-widest opacity-80">
                 {t('header.subtitle')}
               </p>
             </div>
           </div>
-          <div className="h-10 w-px bg-primary-foreground/30 mx-4" />
-          <div className="text-primary-foreground/90 text-sm">
-            <span className="font-medium">
-              {language === 'en' ? 'Government of India' : 'भारत सरकार'}
+          <div className="h-10 w-px bg-white/20 mx-4" />
+          <div className="text-white/90 text-sm">
+            <span className="font-bold tracking-tight">
+              {language === 'en' ? 'GOVERNMENT OF INDIA' : 'भारत सरकार'}
             </span>
             <br />
-            <span className="text-xs opacity-80">
+            <span className="text-xs opacity-75 font-medium text-white/80">
               {language === 'en' ? 'Unified Civic Services Kiosk' : 'एकीकृत नागरिक सेवा कियोस्क'}
             </span>
           </div>
         </div>
 
         {/* Center: Date/Time & Kiosk ID */}
-        <div className="text-center text-primary-foreground">
-          <div className="text-lg font-mono">
+        <div className="text-center text-white hidden xl:block">
+          <div className="text-xl font-mono font-bold tracking-tight">
             {new Date().toLocaleDateString(language === 'en' ? 'en-IN' : 'hi-IN', {
               weekday: 'short',
               day: '2-digit',
@@ -72,7 +75,9 @@ const KioskHeader: React.FC = () => {
               year: 'numeric'
             })}
           </div>
-          <div className="text-xs opacity-70">Kiosk ID: KIOSK-SEC5-001</div>
+          <div className="text-[10px] uppercase tracking-widest opacity-60 bg-black/20 px-2 py-0.5 rounded-full inline-block mt-1">
+            Kiosk ID: KIOSK-SEC5-001
+          </div>
         </div>
 
         {/* Right: Language, User, Logout */}

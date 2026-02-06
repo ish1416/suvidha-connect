@@ -82,11 +82,13 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
   const getColorClasses = (color: string) => {
     switch (color) {
       case 'primary':
-        return 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-blue-200 dark:shadow-blue-900/20 hover:shadow-blue-300 dark:hover:shadow-blue-900/40 border-blue-400/20';
+        return 'bg-gradient-to-br from-primary to-blue-700 text-white shadow-blue-200 dark:shadow-blue-900/20 hover:shadow-blue-300 dark:hover:shadow-blue-900/40 border-blue-400/20';
       case 'secondary':
-        return 'bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-purple-200 dark:shadow-purple-900/20 hover:shadow-purple-300 dark:hover:shadow-purple-900/40 border-purple-400/20';
+        // Saffron/Gold Theme
+        return 'bg-gradient-to-br from-secondary to-orange-600 text-white shadow-orange-200 dark:shadow-orange-900/20 hover:shadow-orange-300 dark:hover:shadow-orange-900/40 border-orange-400/20';
       case 'accent':
-        return 'bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-amber-200 dark:shadow-amber-900/20 hover:shadow-amber-300 dark:hover:shadow-amber-900/40 border-amber-400/20';
+        // GovTech Green Theme
+        return 'bg-gradient-to-br from-accent to-green-700 text-white shadow-green-200 dark:shadow-green-900/20 hover:shadow-green-300 dark:hover:shadow-green-900/40 border-green-400/20';
       default:
         return 'bg-gradient-to-br from-slate-500 to-slate-600 text-white';
     }

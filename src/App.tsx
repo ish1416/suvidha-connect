@@ -23,11 +23,10 @@ const App = () => (
         </Routes>
 
         <footer className="w-full text-center text-xs text-gray-500 py-3 border-t">
-  Developed by{" "}
-  <span className="font-semibold">
-    YellowSense Technologies Pvt Ltd
-  </span>
-</footer>
+          <span className="font-semibold">
+            SUVIDHA Connect - Citizen Kiosk
+          </span>
+        </footer>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
