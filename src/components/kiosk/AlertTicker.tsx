@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { civicAlerts, type CivicAlert } from '@/lib/mockData';
-import { AlertTriangle, Info, CloudRain, Wrench } from 'lucide-react';
+import { AlertTriangle, Info, CloudRain, Wrench, ChevronRight } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AlertTicker: React.FC = () => {
   const { language } = useAuth();
@@ -107,6 +110,75 @@ const AlertTicker: React.FC = () => {
             ))}
           </div>
         </div>
+
+        {/* View All / Details Button */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className={`shrink-0 h-7 text-xs font-medium ml-2 border-l pl-3 hover:bg-white/10 ${hasCritical ? 'text-white border-red-400' : 'text-slate-200 border-slate-600'}`}
+            >
+              {language === 'en' ? 'View All' : 'सभी देखें'}
+              <ChevronRight className="w-3 h-3 ml-1" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0 gap-0 bg-background/95 backdrop-blur-xl border-slate-700">
+            <DialogHeader className="p-6 pb-2 border-b border-border/50">
+              <DialogTitle className="flex items-center gap-2 text-xl">
+                <span className="text-2xl">📢</span>
+                {language === 'en' ? 'Active Alerts & Notifications' : 'सक्रिय अलर्ट और सूचनाएं'}
+              </DialogTitle>
+            </DialogHeader>
+            <ScrollArea className="flex-1 p-6 pt-2">
+              <div className="space-y-4 mt-4">
+                {activeAlerts.map((alert) => (
+                  <div 
+                    key={alert.id} 
+                    className={`p-4 rounded-xl border-l-4 shadow-sm ${
+                      alert.severity === 'critical' ? 'bg-red-50 border-l-red-600 dark:bg-red-950/30' :
+                      alert.severity === 'warning' ? 'bg-yellow-50 border-l-yellow-500 dark:bg-yellow-950/30' :
+                      'bg-blue-50 border-l-blue-500 dark:bg-blue-950/30'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`mt-1 p-2 rounded-full ${
+                        alert.severity === 'critical' ? 'bg-red-100 text-red-600' :
+                        alert.severity === 'warning' ? 'bg-yellow-100 text-yellow-600' :
+                        'bg-blue-100 text-blue-600'
+                      }`}>
+                        {getIcon(alert.type)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start mb-1">
+                          <h3 className="font-bold text-lg leading-tight">
+                            {language === 'en' ? alert.title : alert.titleHindi}
+                          </h3>
+                          <span className="text-[10px] font-mono uppercase tracking-wider opacity-60 bg-black/5 px-2 py-0.5 rounded">
+                            {alert.severity}
+                          </span>
+                        </div>
+                        <p className="text-sm opacity-90 leading-relaxed mb-3">
+                          {language === 'en' ? alert.message : alert.messageHindi}
+                        </p>
+                        <div className="flex items-center justify-between text-xs opacity-60 border-t border-black/5 pt-2 mt-2">
+                          <span>📍 {alert.zones.join(', ')}</span>
+                          <span>🕒 Exp: {new Date(alert.expiresAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {activeAlerts.length === 0 && (
+                  <div className="text-center py-12 opacity-50">
+                    <Info className="w-12 h-12 mx-auto mb-3 opacity-20" />
+                    <p>No active alerts at this moment.</p>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

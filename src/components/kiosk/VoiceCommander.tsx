@@ -53,6 +53,7 @@ interface VoiceCommanderProps {
 const VoiceCommander: React.FC<VoiceCommanderProps> = ({ onNavigate }) => {
   const [isListening, setIsListening] = useState(false);
   const { t, i18n } = useTranslation();
+  const language = i18n.language; // Add this line to access language easily
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
 
   useEffect(() => {
@@ -135,15 +136,57 @@ const VoiceCommander: React.FC<VoiceCommanderProps> = ({ onNavigate }) => {
   if (!recognition) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <Button
-        size="lg"
-        variant={isListening ? "destructive" : "default"}
-        className={`rounded-full w-16 h-16 shadow-lg transition-all duration-300 ${isListening ? 'animate-pulse scale-110' : ''}`}
-        onClick={toggleListening}
-      >
-        {isListening ? <Mic className="w-8 h-8" /> : <MicOff className="w-8 h-8" />}
-      </Button>
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+      {/* Listening Feedback Card */}
+      {isListening && (
+        <div className="bg-black/80 backdrop-blur-md text-white p-4 rounded-xl shadow-2xl mb-2 animate-in slide-in-from-bottom-5 fade-in duration-300 max-w-xs border border-white/10">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            <p className="font-bold text-sm">
+               {language === 'hi' ? 'सुन रहा हूँ...' : 'Listening...'}
+            </p>
+          </div>
+          <p className="text-xs text-gray-400 mb-2">
+            {language === 'hi' ? 'कहने की कोशिश करें:' : 'Try saying:'}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {(language === 'hi' 
+              ? ['बिजली', 'पानी', 'कचरा', 'अंग्रेजी', 'वापस'] 
+              : ['Electricity', 'Water', 'Waste', 'Hindi', 'Home']
+            ).map(cmd => (
+              <span key={cmd} className="bg-white/10 text-white text-[10px] px-2 py-1 rounded-md border border-white/20">
+                {cmd}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="relative group">
+        {/* Pulsing Ring Effect */}
+        {isListening && (
+          <>
+            <div className="absolute inset-0 rounded-full bg-red-500 opacity-20 animate-ping duration-1000" />
+            <div className="absolute -inset-2 rounded-full bg-red-500 opacity-10 animate-pulse duration-2000" />
+          </>
+        )}
+        
+        <Button
+          size="lg"
+          variant={isListening ? "destructive" : "default"}
+          className={`rounded-full w-16 h-16 shadow-lg transition-all duration-300 ${isListening ? 'scale-110 ring-4 ring-red-500/30' : 'hover:scale-105 hover:shadow-xl'}`}
+          onClick={toggleListening}
+        >
+          {isListening ? <Mic className="w-8 h-8 animate-bounce" /> : <MicOff className="w-8 h-8" />}
+        </Button>
+        
+        {/* Tooltip for non-listening state */}
+        {!isListening && (
+          <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-black/80 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+            {language === 'hi' ? 'आवाज़ से आदेश दें' : 'Voice Commands'}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
