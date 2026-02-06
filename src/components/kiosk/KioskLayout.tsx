@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 import KioskHeader from './KioskHeader';
 import AlertTicker from './AlertTicker';
 import LoginScreen from './LoginScreen';
@@ -16,8 +17,41 @@ import { useAuth } from '@/context/AuthContext';
 type ModuleType = 'home' | 'bills' | 'complaint' | 'newService' | 'track' | 'documents' | 'alerts' | 'waste';
 
 const KioskLayout: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, sessionTimeout } = useAuth();
   const [currentModule, setCurrentModule] = useState<ModuleType>('home');
+  const warningShownRef = useRef(false);
+  const prevAuthRef = useRef(isAuthenticated);
+
+  // Session timeout warning and logout notification
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // Check if we just logged out
+      if (prevAuthRef.current) {
+        toast.info('Session Ended', {
+          description: 'You have been logged out due to inactivity.',
+        });
+      }
+      prevAuthRef.current = false;
+      warningShownRef.current = false;
+      return;
+    }
+
+    prevAuthRef.current = true;
+
+    // Warning at 30 seconds
+    if (sessionTimeout < 30000 && !warningShownRef.current) {
+      toast.warning('Session expiring soon', {
+        description: 'You will be logged out in 30 seconds due to inactivity.',
+        duration: 5000,
+      });
+      warningShownRef.current = true;
+    }
+    
+    // Reset warning flag if user becomes active
+    if (sessionTimeout > 30000) {
+      warningShownRef.current = false;
+    }
+  }, [sessionTimeout, isAuthenticated]);
 
   const handleModuleSelect = (module: string) => {
     setCurrentModule(module as ModuleType);
