@@ -61,6 +61,21 @@ export const KioskProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // TTS State
   const [ttsEnabled, setTtsEnabled] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+
+  useEffect(() => {
+    const loadVoices = () => {
+      const availableVoices = window.speechSynthesis.getVoices();
+      setVoices(availableVoices);
+    };
+    
+    loadVoices();
+    
+    // Chrome loads voices asynchronously
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+  }, []);
 
   const speak = useCallback((text: string) => {
     if (!ttsEnabled) return;
@@ -68,18 +83,34 @@ export const KioskProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     window.speechSynthesis.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
-    const langMap: Record<string, string> = {
-      'en': 'en-IN',
-      'hi': 'hi-IN'
-    };
-    utterance.lang = langMap[i18n.language] || 'en-US';
+    
+    // Try to find the best voice
+    const currentLang = i18n.language; // 'en' or 'hi'
+    
+    // Preference: 1. Exact Region (IN), 2. Language Match, 3. Default
+    let targetVoice = voices.find(v => v.lang === (currentLang === 'hi' ? 'hi-IN' : 'en-IN'));
+    
+    if (!targetVoice) {
+      targetVoice = voices.find(v => v.lang.startsWith(currentLang));
+    }
+    
+    if (targetVoice) {
+      utterance.voice = targetVoice;
+      utterance.lang = targetVoice.lang;
+    } else {
+      // Fallback
+      utterance.lang = currentLang === 'hi' ? 'hi-IN' : 'en-US';
+    }
     
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+    utterance.onerror = (e) => {
+      console.error('TTS Error:', e);
+      setIsSpeaking(false);
+    };
     
     window.speechSynthesis.speak(utterance);
-  }, [ttsEnabled, i18n.language]);
+  }, [ttsEnabled, i18n.language, voices]);
 
   const toggleTTS = useCallback(() => {
     setTtsEnabled(prev => {
