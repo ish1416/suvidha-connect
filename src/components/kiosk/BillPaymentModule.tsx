@@ -187,6 +187,10 @@ const BillPaymentModule: React.FC<BillPaymentModuleProps> = ({ onBack }) => {
     doc.text('Thank you for using SUVIDHA Kiosk Services.', 105, 270, { align: 'center' });
     doc.text('This is a computer generated receipt.', 105, 280, { align: 'center' });
     
+    doc.setFontSize(8);
+    doc.setTextColor(200, 200, 200);
+    doc.text('Generated via SUVIDHA Kiosk System', 105, 285, { align: 'center' });
+    
     doc.save(`receipt_${paymentComplete.transactionId}.pdf`);
     toast.success(language === 'en' ? 'Receipt downloaded successfully' : 'रसीद सफलतापूर्वक डाउनलोड की गई');
   };
@@ -241,6 +245,10 @@ const BillPaymentModule: React.FC<BillPaymentModuleProps> = ({ onBack }) => {
     doc.setFont('helvetica', 'normal');
     doc.text('Thank you for using SUVIDHA Kiosk Services.', 105, 270, { align: 'center' });
     doc.text('This is a computer generated receipt.', 105, 280, { align: 'center' });
+    
+    doc.setFontSize(8);
+    doc.setTextColor(200, 200, 200);
+    doc.text('Generated via SUVIDHA Kiosk System', 105, 285, { align: 'center' });
     
     doc.autoPrint();
     window.open(doc.output('bloburl'), '_blank');
