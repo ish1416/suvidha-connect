@@ -93,6 +93,11 @@ const DocumentsModule: React.FC<DocumentsModuleProps> = ({ onBack }) => {
     doc.text(`Document ID: ${id || 'DOC-' + Math.floor(Math.random() * 10000)}`, 20, 40);
     doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 50);
     doc.text('This is a certified document from the SUVIDHA Smart City Portal.', 20, 70);
+    
+    doc.setFontSize(8);
+    doc.setTextColor(200, 200, 200);
+    doc.text('Generated via SUVIDHA Kiosk System', 105, 285, { align: 'center' });
+    
     doc.save(`${type.replace(/\s+/g, '_')}.pdf`);
     toast.success(language === 'en' ? `Downloading ${type}...` : `${type} डाउनलोड हो रहा है...`);
   };
@@ -105,6 +110,11 @@ const DocumentsModule: React.FC<DocumentsModuleProps> = ({ onBack }) => {
     doc.text('PRINT PREVIEW', 105, 30, { align: 'center' });
     doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 50);
     doc.text('This is a certified document.', 20, 70);
+    
+    doc.setFontSize(8);
+    doc.setTextColor(200, 200, 200);
+    doc.text('Generated via SUVIDHA Kiosk System', 105, 285, { align: 'center' });
+    
     doc.autoPrint();
     window.open(doc.output('bloburl'), '_blank');
     toast.success(language === 'en' ? `Opening Print Preview for ${type}...` : `${type} प्रिंट प्रीव्यू खुल रहा है...`);
