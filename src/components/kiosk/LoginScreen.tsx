@@ -182,8 +182,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
                   <div className="space-y-2">
                     <label className="text-sm font-medium">{text.enterOtp}</label>
                     <Input
-                      type="text"
-                      placeholder="000000"
+                      type="password"
+                      placeholder="••••••"
                       value={otp}
                       onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                       className="text-lg h-14 text-center tracking-widest font-mono"
