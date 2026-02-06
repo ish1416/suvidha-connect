@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Smartphone, CreditCard, QrCode, Loader2, Shield, CheckCircle } from 'lucide-react';
+import { Smartphone, CreditCard, QrCode, Loader2, Shield, CheckCircle, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface LoginScreenProps {
@@ -264,6 +264,18 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
             </div>
             <div>•</div>
             <div>{text.autoLogout}</div>
+          </div>
+
+          {/* Certifications */}
+          <div className="mt-4 pt-4 border-t border-border flex justify-center gap-4 opacity-70">
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-green-500/10 rounded border border-green-500/20">
+              <Lock className="w-3 h-3 text-green-600" />
+              <span className="text-[10px] font-semibold text-green-700">256-bit SSL</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-500/10 rounded border border-blue-500/20">
+              <Shield className="w-3 h-3 text-blue-600" />
+              <span className="text-[10px] font-semibold text-blue-700">ISO 27001</span>
+            </div>
           </div>
         </CardContent>
       </Card>
