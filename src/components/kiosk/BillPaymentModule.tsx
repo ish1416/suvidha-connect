@@ -191,6 +191,62 @@ const BillPaymentModule: React.FC<BillPaymentModuleProps> = ({ onBack }) => {
     toast.success(language === 'en' ? 'Receipt downloaded successfully' : 'रसीद सफलतापूर्वक डाउनलोड की गई');
   };
 
+  const handlePrintReceipt = () => {
+    if (!paymentComplete || !selectedBillData) return;
+
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(22);
+    doc.setTextColor(40, 40, 40);
+    doc.text('SUVIDHA PAYMENT RECEIPT', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Smart Urban Virtual Interactive Digital Helpdesk Assistant', 105, 28, { align: 'center' });
+    
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(200, 200, 200);
+    doc.line(20, 35, 190, 35);
+
+    // Content
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(12);
+    doc.text(`Transaction ID:`, 20, 50);
+    doc.setFont('helvetica', 'bold');
+    doc.text(paymentComplete.transactionId, 80, 50);
+    
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Date & Time:`, 20, 60);
+    doc.text(new Date(paymentComplete.timestamp).toLocaleString(), 80, 60);
+    
+    doc.text(`Service Type:`, 20, 70);
+    doc.text(getTypeLabel(selectedBillData.type), 80, 70);
+    
+    doc.text(`Consumer ID:`, 20, 80);
+    doc.text(selectedBillData.consumerId, 80, 80);
+    
+    // Amount Box
+    doc.setFillColor(245, 245, 245);
+    doc.rect(20, 95, 170, 20, 'F');
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Amount Paid:`, 30, 108);
+    doc.setTextColor(0, 128, 0); // Green color
+    doc.text(`INR ${paymentComplete.amount.toLocaleString('en-IN')}`, 180, 108, { align: 'right' });
+
+    // Footer
+    doc.setTextColor(150, 150, 150);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Thank you for using SUVIDHA Kiosk Services.', 105, 270, { align: 'center' });
+    doc.text('This is a computer generated receipt.', 105, 280, { align: 'center' });
+    
+    doc.autoPrint();
+    window.open(doc.output('bloburl'), '_blank');
+    toast.success(language === 'en' ? 'Opening Print Preview...' : 'प्रिंट प्रीव्यू खुल रहा है...');
+  };
+
   // Payment Complete Screen
   if (paymentComplete) {
     return (
@@ -237,7 +293,7 @@ const BillPaymentModule: React.FC<BillPaymentModuleProps> = ({ onBack }) => {
                 <Download className="w-5 h-5 mr-2" />
                 {text.downloadReceipt}
               </Button>
-              <Button className="flex-1 h-14" variant="outline">
+              <Button className="flex-1 h-14" variant="outline" onClick={handlePrintReceipt}>
                 <Receipt className="w-5 h-5 mr-2" />
                 {text.printReceipt}
               </Button>
