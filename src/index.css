@@ -174,4 +174,9 @@ All colors MUST be HSL.
   .high-contrast button {
     @apply border-2 border-black;
   }
+  
+  .kiosk-header {
+    background-color: hsl(var(--kiosk-header-bg));
+    color: hsl(var(--kiosk-header-fg));
+  }
 }

@@ -38,5 +38,6 @@
       "login": "Login",
       "admin": "Admin",
       "logout": "Logout"
-  }
+  },
+  "Speak": "Speak"
 }
