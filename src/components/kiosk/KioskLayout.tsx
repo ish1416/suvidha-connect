@@ -95,11 +95,21 @@ const KioskLayout: React.FC = () => {
         {renderModule()}
       </main>
       {/* Footer */}
-      <footer className="bg-sidebar text-sidebar-foreground py-3 px-6 text-center text-sm">
-        <div className="flex items-center justify-between">
-          <span>© 2026 SUVIDHA - Government of India</span>
-          <span className="opacity-70">Powered by Smart City Mission</span>
-          <span className="opacity-70">Version 1.0.0</span>
+      <footer className="bg-slate-900 text-slate-300 py-4 px-6 text-center text-xs border-t border-slate-800">
+        <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="font-mono">SYSTEM ONLINE • v1.0.0</span>
+          </div>
+          <div className="flex items-center gap-6 opacity-80">
+            <span>© 2026 SUVIDHA - Govt of India</span>
+            <span className="hidden md:inline">•</span>
+            <span>Powered by Smart City Mission</span>
+          </div>
+          <div className="flex items-center gap-4 text-[10px] uppercase tracking-wider opacity-60">
+             <span>SECURE CONNECTION</span>
+             <span>DPDP COMPLIANT</span>
+          </div>
         </div>
       </footer>
     </div>

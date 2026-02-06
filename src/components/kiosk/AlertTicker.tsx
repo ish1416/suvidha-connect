@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { civicAlerts, type CivicAlert } from '@/lib/mockData';
-import { AlertTriangle, Info, CloudRain, Wrench, ChevronRight } from 'lucide-react';
+import { AlertTriangle, Info, CloudRain, Wrench, ChevronRight, Filter, Clock } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 
 const AlertTicker: React.FC = () => {
   const { language } = useAuth();
@@ -60,6 +62,14 @@ const AlertTicker: React.FC = () => {
   const activeAlerts = alerts.filter(
     alert => new Date(alert.expiresAt) > new Date()
   );
+
+  const getFilteredAlerts = (category: string) => {
+    if (category === 'all') return activeAlerts;
+    if (category === 'critical') return activeAlerts.filter(a => a.severity === 'critical');
+    if (category === 'warning') return activeAlerts.filter(a => a.severity === 'warning');
+    if (category === 'maintenance') return activeAlerts.filter(a => a.type === 'maintenance');
+    return activeAlerts;
+  };
 
   if (activeAlerts.length === 0) return null;
 
@@ -123,60 +133,111 @@ const AlertTicker: React.FC = () => {
               <ChevronRight className="w-3 h-3 ml-1" />
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0 gap-0 bg-background/95 backdrop-blur-xl border-slate-700">
+          <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col p-0 gap-0 bg-background/95 backdrop-blur-xl border-slate-700">
             <DialogHeader className="p-6 pb-2 border-b border-border/50">
-              <DialogTitle className="flex items-center gap-2 text-xl">
-                <span className="text-2xl">📢</span>
-                {language === 'en' ? 'Active Alerts & Notifications' : 'सक्रिय अलर्ट और सूचनाएं'}
-              </DialogTitle>
-            </DialogHeader>
-            <ScrollArea className="flex-1 p-6 pt-2">
-              <div className="space-y-4 mt-4">
-                {activeAlerts.map((alert) => (
-                  <div 
-                    key={alert.id} 
-                    className={`p-4 rounded-xl border-l-4 shadow-sm ${
-                      alert.severity === 'critical' ? 'bg-red-50 border-l-red-600 dark:bg-red-950/30' :
-                      alert.severity === 'warning' ? 'bg-yellow-50 border-l-yellow-500 dark:bg-yellow-950/30' :
-                      'bg-blue-50 border-l-blue-500 dark:bg-blue-950/30'
-                    }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`mt-1 p-2 rounded-full ${
-                        alert.severity === 'critical' ? 'bg-red-100 text-red-600' :
-                        alert.severity === 'warning' ? 'bg-yellow-100 text-yellow-600' :
-                        'bg-blue-100 text-blue-600'
-                      }`}>
-                        {getIcon(alert.type)}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start mb-1">
-                          <h3 className="font-bold text-lg leading-tight">
-                            {language === 'en' ? alert.title : alert.titleHindi}
-                          </h3>
-                          <span className="text-[10px] font-mono uppercase tracking-wider opacity-60 bg-black/5 px-2 py-0.5 rounded">
-                            {alert.severity}
-                          </span>
-                        </div>
-                        <p className="text-sm opacity-90 leading-relaxed mb-3">
-                          {language === 'en' ? alert.message : alert.messageHindi}
-                        </p>
-                        <div className="flex items-center justify-between text-xs opacity-60 border-t border-black/5 pt-2 mt-2">
-                          <span>📍 {alert.zones.join(', ')}</span>
-                          <span>🕒 Exp: {new Date(alert.expiresAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {activeAlerts.length === 0 && (
-                  <div className="text-center py-12 opacity-50">
-                    <Info className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                    <p>No active alerts at this moment.</p>
-                  </div>
-                )}
+              <div className="flex items-center justify-between">
+                <DialogTitle className="flex items-center gap-2 text-xl">
+                  <span className="text-2xl">📢</span>
+                  {language === 'en' ? 'Active Alerts & Notifications' : 'सक्रिय अलर्ट और सूचनाएं'}
+                </DialogTitle>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">
+                  <Clock className="w-3 h-3" />
+                  {new Date().toLocaleString(language === 'en' ? 'en-IN' : 'hi-IN', { 
+                    weekday: 'short', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                  })}
+                </div>
               </div>
-            </ScrollArea>
+            </DialogHeader>
+            
+            <Tabs defaultValue="all" className="flex-1 flex flex-col overflow-hidden">
+              <div className="px-6 pt-4">
+                <TabsList className="grid w-full grid-cols-4 bg-muted/50">
+                  <TabsTrigger value="all">{language === 'en' ? 'All' : 'सभी'}</TabsTrigger>
+                  <TabsTrigger value="critical" className="data-[state=active]:bg-red-100 data-[state=active]:text-red-900 dark:data-[state=active]:bg-red-900/40 dark:data-[state=active]:text-red-100">
+                    {language === 'en' ? 'Critical' : 'गंभीर'}
+                  </TabsTrigger>
+                  <TabsTrigger value="warning" className="data-[state=active]:bg-yellow-100 data-[state=active]:text-yellow-900 dark:data-[state=active]:bg-yellow-900/40 dark:data-[state=active]:text-yellow-100">
+                    {language === 'en' ? 'Warning' : 'चेतावनी'}
+                  </TabsTrigger>
+                  <TabsTrigger value="maintenance" className="data-[state=active]:bg-orange-100 data-[state=active]:text-orange-900 dark:data-[state=active]:bg-orange-900/40 dark:data-[state=active]:text-orange-100">
+                    {language === 'en' ? 'Maint.' : 'रखरखाव'}
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+
+              {['all', 'critical', 'warning', 'maintenance'].map((tabValue) => (
+                <TabsContent key={tabValue} value={tabValue} className="flex-1 p-0 m-0 overflow-hidden">
+                  <ScrollArea className="h-full p-6 pt-2">
+                    <div className="space-y-4 mt-2">
+                      {getFilteredAlerts(tabValue).length > 0 ? (
+                        getFilteredAlerts(tabValue).map((alert) => (
+                          <div 
+                            key={alert.id} 
+                            className={`p-4 rounded-xl border-l-4 shadow-sm transition-all hover:shadow-md ${
+                              alert.severity === 'critical' ? 'bg-red-50 border-l-red-600 dark:bg-red-950/30' :
+                              alert.severity === 'warning' ? 'bg-yellow-50 border-l-yellow-500 dark:bg-yellow-950/30' :
+                              alert.type === 'maintenance' ? 'bg-orange-50 border-l-orange-500 dark:bg-orange-950/30' :
+                              'bg-blue-50 border-l-blue-500 dark:bg-blue-950/30'
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className={`mt-1 p-2 rounded-full shrink-0 ${
+                                alert.severity === 'critical' ? 'bg-red-100 text-red-600' :
+                                alert.severity === 'warning' ? 'bg-yellow-100 text-yellow-600' :
+                                alert.type === 'maintenance' ? 'bg-orange-100 text-orange-600' :
+                                'bg-blue-100 text-blue-600'
+                              }`}>
+                                {getIcon(alert.type)}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-start mb-1 gap-2">
+                                  <h3 className="font-bold text-lg leading-tight truncate">
+                                    {language === 'en' ? alert.title : alert.titleHindi}
+                                  </h3>
+                                  <Badge variant="outline" className={`uppercase text-[10px] tracking-wider shrink-0 ${
+                                    alert.severity === 'critical' ? 'border-red-500 text-red-600 bg-red-50' :
+                                    alert.severity === 'warning' ? 'border-yellow-500 text-yellow-600 bg-yellow-50' :
+                                    'border-slate-500 text-slate-600 bg-slate-50'
+                                  }`}>
+                                    {alert.severity}
+                                  </Badge>
+                                </div>
+                                <p className="text-sm opacity-90 leading-relaxed mb-3">
+                                  {language === 'en' ? alert.message : alert.messageHindi}
+                                </p>
+                                <div className="flex flex-wrap items-center justify-between text-xs opacity-60 border-t border-black/5 pt-2 mt-2 gap-2">
+                                  <span className="flex items-center gap-1">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                                    {alert.zones.join(', ')}
+                                  </span>
+                                  <span className="font-mono bg-black/5 px-2 py-0.5 rounded">
+                                    EXP: {new Date(alert.expiresAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-16 opacity-50 flex flex-col items-center">
+                          <div className="bg-muted p-4 rounded-full mb-4">
+                            <Filter className="w-8 h-8 opacity-40" />
+                          </div>
+                          <p className="font-medium">
+                            {language === 'en' ? 'No alerts in this category' : 'इस श्रेणी में कोई अलर्ट नहीं है'}
+                          </p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {language === 'en' ? 'Check other categories for updates' : 'अपडेट के लिए अन्य श्रेणियां देखें'}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </ScrollArea>
+                </TabsContent>
+              ))}
+            </Tabs>
           </DialogContent>
         </Dialog>
       </div>
