@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import KioskHeader from './KioskHeader';
-import AlertTicker from './AlertTicker';
 import LoginScreen from './LoginScreen';
 import ServiceModules from './ServiceModules';
 import BillPaymentModule from './BillPaymentModule';
@@ -96,7 +95,6 @@ const KioskLayout: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <KioskHeader />
-      <AlertTicker />
       <VoiceCommander onNavigate={handleModuleSelect} />
       <ChatAssistant onNavigate={handleModuleSelect} />
       <main className="flex-1 overflow-auto">

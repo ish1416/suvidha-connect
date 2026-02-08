@@ -127,8 +127,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
     <div className="min-h-[calc(100vh-140px)] flex items-center justify-center p-8 bg-muted/30 relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute inset-0 z-0 opacity-5">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-primary rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-600 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
       </div>
 
       <Card className="w-full max-w-lg shadow-2xl border-0 ring-1 ring-black/5 z-10 bg-white/80 backdrop-blur-xl">

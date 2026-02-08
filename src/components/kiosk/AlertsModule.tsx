@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   ArrowLeft, AlertTriangle, Info, CloudRain, 
-  Wrench, Bell, Calendar, MapPin
+  Wrench, Bell, Calendar, MapPin, Phone, Shield, Flame
 } from 'lucide-react';
 import { civicAlerts } from '@/lib/mockData';
 
@@ -55,24 +55,24 @@ const AlertsModule: React.FC<AlertsModuleProps> = ({ onBack }) => {
     switch (severity) {
       case 'critical':
         return {
-          bg: 'bg-destructive/10',
-          border: 'border-destructive/30',
-          icon: 'text-destructive bg-destructive/20',
-          badge: 'bg-destructive text-destructive-foreground'
+          bg: 'bg-red-50',
+          border: 'border-red-200',
+          icon: 'text-red-600 bg-red-100',
+          badge: 'bg-red-600 text-white'
         };
       case 'warning':
         return {
-          bg: 'bg-secondary/10',
-          border: 'border-secondary/30',
-          icon: 'text-secondary bg-secondary/20',
-          badge: 'bg-secondary text-secondary-foreground'
+          bg: 'bg-orange-50',
+          border: 'border-orange-200',
+          icon: 'text-orange-600 bg-orange-100',
+          badge: 'bg-orange-600 text-white'
         };
       default:
         return {
-          bg: 'bg-primary/10',
-          border: 'border-primary/30',
-          icon: 'text-primary bg-primary/20',
-          badge: 'bg-primary text-primary-foreground'
+          bg: 'bg-blue-50',
+          border: 'border-blue-200',
+          icon: 'text-blue-600 bg-blue-100',
+          badge: 'bg-blue-600 text-white'
         };
     }
   };
@@ -95,12 +95,12 @@ const AlertsModule: React.FC<AlertsModuleProps> = ({ onBack }) => {
       </div>
 
       <div className="max-w-4xl mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="w-5 h-5 text-primary" />
+        <Card className="border-t-4 border-t-blue-600 shadow-md">
+          <CardHeader className="bg-slate-50/50 border-b border-slate-100">
+            <CardTitle className="flex items-center gap-2 text-blue-900">
+              <Bell className="w-5 h-5 text-blue-600" />
               {text.activeAlerts}
-              <span className="ml-2 px-2 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
+              <span className="ml-2 px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded-full border border-blue-200">
                 {activeAlerts.length}
               </span>
             </CardTitle>
@@ -155,6 +155,53 @@ const AlertsModule: React.FC<AlertsModuleProps> = ({ onBack }) => {
             )}
           </CardContent>
         </Card>
+
+        {/* Emergency Contacts Grid - GovTech Blue Theme */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+          <Card className="bg-white border-red-200 shadow-sm hover:shadow-md transition-all hover:border-red-400 group">
+            <CardContent className="p-6 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                <Shield className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-600">Police Control</p>
+                <p className="text-2xl font-bold text-red-900">100</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-white border-orange-200 shadow-sm hover:shadow-md transition-all hover:border-orange-400 group">
+            <CardContent className="p-6 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                <Flame className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-600">Fire Brigade</p>
+                <p className="text-2xl font-bold text-orange-900">101</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-white border-blue-200 shadow-sm hover:shadow-md transition-all hover:border-blue-400 group">
+            <CardContent className="p-6 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <Phone className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-600">Ambulance</p>
+                <p className="text-2xl font-bold text-blue-900">102</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="mt-8 p-6 bg-gradient-to-r from-blue-900 to-blue-800 rounded-xl text-white flex justify-between items-center shadow-lg">
+           <div>
+             <h3 className="text-xl font-bold mb-1">Witnessed an incident?</h3>
+             <p className="text-blue-100">Help your community by reporting issues instantly.</p>
+           </div>
+           <Button className="bg-white text-blue-900 hover:bg-blue-50 font-bold shadow-lg border border-blue-100" onClick={onBack}>
+             Report Now
+           </Button>
+        </div>
 
         <div className="text-center mt-8">
           <Button variant="outline" size="lg" onClick={onBack}>

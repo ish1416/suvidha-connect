@@ -45,6 +45,13 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
       color: 'secondary'
     },
     {
+      id: 'alerts',
+      icon: Bell,
+      title: i18n.language === 'en' ? 'Civic Alerts' : 'नागरिक अलर्ट',
+      description: i18n.language === 'en' ? 'Emergency updates & notices' : 'आपातकालीन अपडेट और नोटिस',
+      color: 'secondary'
+    },
+    {
       id: 'appointment',
       icon: Calendar,
       title: i18n.language === 'en' ? 'Book Appointment' : 'अपॉइंटमेंट बुक करें',
@@ -80,13 +87,6 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
       color: 'secondary'
     },
     {
-      id: 'alerts',
-      icon: Bell,
-      title: t('services.alerts.title'),
-      description: t('services.alerts.description'),
-      color: 'accent'
-    },
-    {
       id: 'waste',
       icon: Trash2,
       title: t('services.waste.title'),
@@ -98,15 +98,22 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
   const getColorClasses = (color: string) => {
     switch (color) {
       case 'primary':
-        return 'bg-gradient-to-br from-primary to-blue-700 text-white shadow-blue-200 dark:shadow-blue-900/20 hover:shadow-blue-300 dark:hover:shadow-blue-900/40 border-blue-400/20';
+        return 'bg-gradient-to-br from-white to-blue-50 text-slate-800 shadow-sm hover:shadow-xl border-l-4 border-l-blue-500 border-y border-r border-slate-100 hover:border-blue-400 transition-all group';
       case 'secondary':
-        // Saffron/Gold Theme
-        return 'bg-gradient-to-br from-secondary to-orange-600 text-white shadow-orange-200 dark:shadow-orange-900/20 hover:shadow-orange-300 dark:hover:shadow-orange-900/40 border-orange-400/20';
+        return 'bg-gradient-to-br from-white to-orange-50 text-slate-800 shadow-sm hover:shadow-xl border-l-4 border-l-orange-500 border-y border-r border-slate-100 hover:border-orange-400 transition-all group';
       case 'accent':
-        // GovTech Green Theme
-        return 'bg-gradient-to-br from-accent to-green-700 text-white shadow-green-200 dark:shadow-green-900/20 hover:shadow-green-300 dark:hover:shadow-green-900/40 border-green-400/20';
+        return 'bg-gradient-to-br from-white to-green-50 text-slate-800 shadow-sm hover:shadow-xl border-l-4 border-l-green-500 border-y border-r border-slate-100 hover:border-green-400 transition-all group';
       default:
-        return 'bg-gradient-to-br from-slate-500 to-slate-600 text-white';
+        return 'bg-gradient-to-br from-white to-slate-50 text-slate-800 shadow-sm hover:shadow-xl border-l-4 border-l-slate-500 border-y border-r border-slate-100 hover:border-slate-400 transition-all group';
+    }
+  };
+
+  const getIconColor = (color: string) => {
+    switch (color) {
+      case 'primary': return 'text-blue-600 group-hover:text-blue-700 bg-blue-50 group-hover:bg-blue-100';
+      case 'secondary': return 'text-orange-600 group-hover:text-orange-700 bg-orange-50 group-hover:bg-orange-100';
+      case 'accent': return 'text-green-600 group-hover:text-green-700 bg-green-50 group-hover:bg-green-100';
+      default: return 'text-slate-600 group-hover:text-slate-700 bg-slate-50 group-hover:bg-slate-100';
     }
   };
 
@@ -132,29 +139,40 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
           >
             <CardContent className="p-6 flex flex-col items-center text-center h-full justify-center min-h-[220px] relative overflow-hidden group">
               {/* Background Pattern */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-all duration-500" />
+              <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 transition-all duration-500 opacity-20 ${
+                module.color === 'primary' ? 'bg-blue-500' : 
+                module.color === 'secondary' ? 'bg-orange-500' : 
+                module.color === 'accent' ? 'bg-green-500' : 'bg-slate-500'
+              }`} />
               
               <div className="mb-5 relative z-10">
-                <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-sm shadow-inner ring-1 ring-white/30 group-hover:scale-110 transition-transform duration-300">
+                <div className={`p-4 rounded-2xl shadow-sm ring-1 ring-slate-100 group-hover:scale-110 transition-transform duration-300 group-hover:shadow-md ${getIconColor(module.color)}`}>
                   <module.icon className="w-12 h-12" />
                 </div>
                 {module.subIcons && (
-                  <div className="flex gap-1 absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-black/20 backdrop-blur-md rounded-full px-2 py-0.5 border border-white/10 shadow-sm">
+                  <div className="flex gap-1 absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-white rounded-full px-2 py-0.5 border border-slate-200 shadow-sm">
                     {module.subIcons.map((SubIcon, index) => (
-                      <SubIcon key={index} className="w-3.5 h-3.5" />
+                      <SubIcon key={index} className={`w-3.5 h-3.5 ${
+                        module.color === 'primary' ? 'text-blue-500' : 
+                        module.color === 'secondary' ? 'text-orange-500' : 'text-green-500'
+                      }`} />
                     ))}
                   </div>
                 )}
               </div>
               
-              <h3 className="text-xl font-bold mb-2 z-10 tracking-tight">{module.title}</h3>
-              <p className="text-sm opacity-90 z-10 leading-relaxed max-w-[85%]">{module.description}</p>
+              <h3 className={`text-xl font-bold mb-2 z-10 tracking-tight transition-colors ${
+                module.color === 'primary' ? 'text-slate-900 group-hover:text-blue-700' : 
+                module.color === 'secondary' ? 'text-slate-900 group-hover:text-orange-700' : 
+                'text-slate-900 group-hover:text-green-700'
+              }`}>{module.title}</h3>
+              <p className="text-sm text-slate-600 z-10 leading-relaxed max-w-[90%]">{module.description}</p>
               
               {ttsEnabled && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="mt-4 hover:bg-white/20 text-white border border-white/20 z-10"
+                  className="mt-4 hover:bg-blue-50 text-blue-600 border border-blue-100 z-10"
                   onClick={(e) => {
                     e.stopPropagation();
                     speak(`${module.title}. ${module.description}`);

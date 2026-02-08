@@ -108,8 +108,62 @@ const BillPaymentModule: React.FC<BillPaymentModuleProps> = ({ onBack }) => {
     }
   };
 
+  const getServiceStyles = (type: string) => {
+    switch (type) {
+      case 'electricity':
+        return {
+          bg: 'bg-yellow-50',
+          hoverBg: 'hover:bg-yellow-50',
+          border: 'border-yellow-200',
+          borderActive: 'border-yellow-500',
+          text: 'text-yellow-700',
+          iconBg: 'bg-yellow-100',
+          iconText: 'text-yellow-600',
+          button: 'bg-yellow-600 hover:bg-yellow-700',
+          highlight: 'bg-yellow-50/50'
+        };
+      case 'gas':
+        return {
+          bg: 'bg-orange-50',
+          hoverBg: 'hover:bg-orange-50',
+          border: 'border-orange-200',
+          borderActive: 'border-orange-500',
+          text: 'text-orange-700',
+          iconBg: 'bg-orange-100',
+          iconText: 'text-orange-600',
+          button: 'bg-orange-600 hover:bg-orange-700',
+          highlight: 'bg-orange-50/50'
+        };
+      case 'water':
+        return {
+          bg: 'bg-blue-50',
+          hoverBg: 'hover:bg-blue-50',
+          border: 'border-blue-200',
+          borderActive: 'border-blue-500',
+          text: 'text-blue-700',
+          iconBg: 'bg-blue-100',
+          iconText: 'text-blue-600',
+          button: 'bg-blue-600 hover:bg-blue-700',
+          highlight: 'bg-blue-50/50'
+        };
+      default:
+        return {
+          bg: 'bg-slate-50',
+          hoverBg: 'hover:bg-slate-50',
+          border: 'border-slate-200',
+          borderActive: 'border-slate-500',
+          text: 'text-slate-700',
+          iconBg: 'bg-slate-100',
+          iconText: 'text-slate-600',
+          button: 'bg-slate-600 hover:bg-slate-700',
+          highlight: 'bg-slate-50/50'
+        };
+    }
+  };
+
   const citizenBills = bills.filter(b => b.status !== 'paid');
   const selectedBillData = bills.find(b => b.id === selectedBill);
+  const totalDue = citizenBills.reduce((sum, bill) => sum + bill.amount, 0);
 
   const handlePayment = async () => {
     if (!selectedBill || !paymentMethod) return;
@@ -264,61 +318,63 @@ const BillPaymentModule: React.FC<BillPaymentModuleProps> = ({ onBack }) => {
 
   // Payment Complete Screen
   if (paymentComplete) {
+    const styles = selectedBillData ? getServiceStyles(selectedBillData.type) : getServiceStyles('default');
+
     return (
-      <div className="p-8 max-w-2xl mx-auto">
-        <Card className="border-2 border-accent shadow-xl">
+      <div className="p-8 max-w-2xl mx-auto animate-in fade-in zoom-in duration-300">
+        <Card className={`border ${styles.border} shadow-xl`}>
           <CardContent className="p-8 text-center">
-            <div className="w-20 h-20 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-12 h-12 text-accent" />
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 border ${styles.highlight} ${styles.border}`}>
+              <CheckCircle className={`w-12 h-12 ${styles.text}`} />
             </div>
-            <h2 className="text-3xl font-bold text-accent mb-2">{text.success}</h2>
-            <p className="text-muted-foreground mb-6">
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">{text.success}</h2>
+            <p className={`text-slate-600 mb-6 text-2xl font-bold ${styles.text}`}>
               ₹{paymentComplete.amount.toLocaleString('en-IN')}
             </p>
 
-            <div className="bg-muted p-6 rounded-lg mb-6 text-left space-y-3">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">{text.transactionId}</span>
-                <span className="font-mono font-bold">{paymentComplete.transactionId}</span>
+            <div className={`p-6 rounded-lg mb-6 text-left space-y-3 border ${styles.highlight} ${styles.border}`}>
+              <div className="flex justify-between border-b border-slate-200 pb-2">
+                <span className="text-slate-500">{text.transactionId}</span>
+                <span className="font-mono font-bold text-slate-900">{paymentComplete.transactionId}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Date & Time</span>
-                <span>{new Date(paymentComplete.timestamp).toLocaleString()}</span>
+                <span className="text-slate-500">Date & Time</span>
+                <span className="text-slate-900">{new Date(paymentComplete.timestamp).toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Service</span>
-                <span>{selectedBillData ? getTypeLabel(selectedBillData.type) : ''}</span>
+                <span className="text-slate-500">Service</span>
+                <span className="text-slate-900 font-medium">{selectedBillData ? getTypeLabel(selectedBillData.type) : ''}</span>
               </div>
             </div>
 
             <div className="flex justify-center mb-6">
-              <div className="p-4 bg-white rounded-lg border shadow-sm">
+              <div className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
                 <QRCodeSVG 
                   value={JSON.stringify(paymentComplete)} 
                   size={180} 
                   level="H"
                   includeMargin={true}
                 />
-                <p className="text-xs text-center mt-2 text-black font-medium">Scan to Download Receipt</p>
+                <p className="text-xs text-center mt-2 text-slate-500 font-medium">Scan to Download Receipt</p>
               </div>
             </div>
 
             <div className="flex gap-4 mb-6">
-              <Button className="flex-1 h-14" variant="outline" onClick={handleDownloadReceipt}>
+              <Button className={`flex-1 h-14 border hover:bg-opacity-10 hover:text-opacity-90 ${styles.border} ${styles.text} ${styles.hoverBg}`} variant="outline" onClick={handleDownloadReceipt}>
                 <Download className="w-5 h-5 mr-2" />
                 {text.downloadReceipt}
               </Button>
-              <Button className="flex-1 h-14" variant="outline" onClick={handlePrintReceipt}>
+              <Button className={`flex-1 h-14 border hover:bg-opacity-10 hover:text-opacity-90 ${styles.border} ${styles.text} ${styles.hoverBg}`} variant="outline" onClick={handlePrintReceipt}>
                 <Receipt className="w-5 h-5 mr-2" />
                 {text.printReceipt}
               </Button>
             </div>
 
             <div className="flex gap-4">
-              <Button className="flex-1 h-14" variant="secondary" onClick={resetPayment}>
+              <Button className="flex-1 h-14 bg-white text-slate-700 border border-slate-300 hover:bg-slate-50" variant="secondary" onClick={resetPayment}>
                 {text.newPayment}
               </Button>
-              <Button className="flex-1 h-14" onClick={onBack}>
+              <Button className={`flex-1 h-14 text-white ${styles.button}`} onClick={onBack}>
                 {text.backToHome}
               </Button>
             </div>
@@ -329,177 +385,292 @@ const BillPaymentModule: React.FC<BillPaymentModuleProps> = ({ onBack }) => {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 space-y-8 animate-in fade-in duration-500">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <Button variant="ghost" size="icon" onClick={onBack} className="h-12 w-12">
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" onClick={onBack} className="h-12 w-12 rounded-full hover:bg-blue-50 text-blue-600">
           <ArrowLeft className="w-6 h-6" />
         </Button>
         <div>
-          <h2 className="text-2xl font-bold">{text.title}</h2>
-          <p className="text-muted-foreground">{text.subtitle}</p>
+          <h2 className="text-2xl font-bold text-slate-900">{text.title}</h2>
+          <p className="text-slate-500">{text.subtitle}</p>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-        {/* Bill Selection */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{text.selectBill}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {citizenBills.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <CheckCircle className="w-12 h-12 mx-auto mb-4 text-accent" />
-                <p>{text.noBills}</p>
-              </div>
-            ) : (
-              citizenBills.map((bill) => {
-                const Icon = getIcon(bill.type);
-                const isOverdue = bill.status === 'overdue';
-                return (
-                  <div
-                    key={bill.id}
-                    className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                      selectedBill === bill.id
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:border-primary/50'
-                    } ${isOverdue ? 'bg-destructive/5' : ''}`}
-                    onClick={() => setSelectedBill(bill.id)}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                        bill.type === 'electricity' ? 'bg-yellow-100 text-yellow-600' :
-                        bill.type === 'gas' ? 'bg-orange-100 text-orange-600' :
-                        'bg-blue-100 text-blue-600'
-                      }`}>
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold">{getTypeLabel(bill.type)}</span>
-                          {isOverdue && (
-                            <span className="px-2 py-0.5 text-xs bg-destructive text-destructive-foreground rounded">
-                              {text.overdue}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {text.dueDate}: {new Date(bill.dueDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xl font-bold">₹{bill.amount.toLocaleString('en-IN')}</p>
-                        <p className="text-sm text-muted-foreground">{bill.units} {text.units}</p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Payment Method & Summary */}
-        <div className="space-y-6">
-          {selectedBillData && (
-            <>
-              {/* Bill Summary */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Bill Summary</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">{text.billDate}</span>
-                    <span>{new Date(selectedBillData.billDate).toLocaleDateString()}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">{text.dueDate}</span>
-                    <span>{new Date(selectedBillData.dueDate).toLocaleDateString()}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b">
-                    <span className="text-muted-foreground">{text.units}</span>
-                    <span>{selectedBillData.units}</span>
-                  </div>
-                  <div className="flex justify-between py-2 text-xl font-bold">
-                    <span>{text.amount}</span>
-                    <span>₹{selectedBillData.amount.toLocaleString('en-IN')}</span>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Payment Method */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">{text.selectPayment}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {[
-                    { id: 'upi', label: text.upi, icon: Smartphone },
-                    { id: 'card', label: text.card, icon: CreditCard },
-                    { id: 'netbanking', label: text.netbanking, icon: Building }
-                  ].map((method) => (
-                    <div
-                      key={method.id}
-                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-4 ${
-                        paymentMethod === method.id
-                          ? 'border-primary bg-primary/5'
-                          : 'border-border hover:border-primary/50'
-                      }`}
-                      onClick={() => setPaymentMethod(method.id)}
-                    >
-                      <method.icon className="w-6 h-6 text-primary" />
-                      <span className="font-medium">{method.label}</span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-
-              {/* Pay Button */}
-              <Button
-                className="w-full h-16 text-xl"
-                disabled={!paymentMethod || processing}
-                onClick={handlePayment}
-              >
-                {processing ? (
-                  <>
-                    <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                    {text.processing}
-                  </>
-                ) : (
-                  <>
-                    {text.payNow} - ₹{selectedBillData.amount.toLocaleString('en-IN')}
-                  </>
+      {/* Dashboard Summary */}
+      {citizenBills.length > 0 && (
+        <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+          <div className="relative z-10 flex justify-between items-center">
+            <div>
+              <p className="text-slate-400 font-medium mb-2">{text.amount}</p>
+              <h3 className="text-5xl font-bold tracking-tight">₹{totalDue.toLocaleString('en-IN')}</h3>
+              <p className="text-slate-400 mt-2 flex items-center gap-2">
+                <span className="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-sm font-medium border border-blue-500/30">
+                  {citizenBills.length} Bills Pending
+                </span>
+                {citizenBills.some(b => b.status === 'overdue') && (
+                  <span className="bg-red-500/20 text-red-300 px-2 py-1 rounded text-sm font-medium border border-red-500/30">
+                    Overdue Items
+                  </span>
                 )}
-              </Button>
-            </>
-          )}
-
-          {/* Previous Payments */}
-          {selectedBillData && selectedBillData.previousPayments.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <History className="w-5 h-5" />
-                  {text.previousPayments}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {selectedBillData.previousPayments.slice(0, 3).map((payment, idx) => (
-                    <div key={idx} className="flex justify-between text-sm py-2 border-b last:border-0">
-                      <span className="text-muted-foreground">{payment.date}</span>
-                      <span className="font-mono">{payment.transactionId}</span>
-                      <span className="font-medium">₹{payment.amount.toLocaleString('en-IN')}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+              </p>
+            </div>
+            <div className="hidden md:block">
+              <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/10">
+                <CreditCard className="w-8 h-8 text-white" />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+
+      <Tabs defaultValue="pending" className="space-y-6">
+        <TabsList className="bg-slate-100 p-1 rounded-xl w-full max-w-md mx-auto grid grid-cols-2">
+          <TabsTrigger value="pending" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-blue-700 py-3">
+            {text.selectBill}
+          </TabsTrigger>
+          <TabsTrigger value="history" className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-blue-700 py-3">
+            {text.viewHistory}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="pending" className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {/* Bill Selection */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                <Receipt className="w-5 h-5" /> Pending Bills
+              </h3>
+              {citizenBills.length === 0 ? (
+                <Card className="border-dashed border-2 border-slate-200 bg-slate-50/50">
+                  <CardContent className="text-center py-12 text-slate-400">
+                    <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500/20" />
+                    <p className="text-lg font-medium text-slate-600">{text.noBills}</p>
+                    <p className="text-sm">You're all caught up!</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="space-y-4">
+                  {citizenBills.map((bill) => {
+                    const Icon = getIcon(bill.type);
+                    const styles = getServiceStyles(bill.type);
+                    const isOverdue = bill.status === 'overdue';
+                    const isSelected = selectedBill === bill.id;
+                    
+                    // Calculate days left
+                    const daysLeft = Math.ceil((new Date(bill.dueDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
+                    const dueLabel = daysLeft < 0 ? `Overdue by ${Math.abs(daysLeft)} days` : `Due in ${daysLeft} days`;
+                    
+                    return (
+                      <div
+                        key={bill.id}
+                        className={`group relative p-5 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg ${
+                          isSelected
+                            ? `${styles.borderActive} ${styles.bg} shadow-md ring-1 ring-offset-2 ${styles.borderActive.replace('border', 'ring')}`
+                            : `border-slate-200 bg-white hover:border-slate-300`
+                        } ${isOverdue ? 'border-l-4 border-l-red-500' : ''}`}
+                        onClick={() => setSelectedBill(bill.id)}
+                      >
+                        <div className="flex items-start gap-5">
+                          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
+                            isSelected ? `bg-white ${styles.iconText} shadow-sm` : `${styles.iconBg} ${styles.iconText} group-hover:scale-110`
+                          }`}>
+                            <Icon className="w-7 h-7" />
+                          </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className={`font-bold text-lg ${isSelected ? styles.text : 'text-slate-800'}`}>
+                                  {getTypeLabel(bill.type)}
+                                </h4>
+                                <p className="text-sm text-slate-500 font-mono mt-0.5">{bill.consumerId}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className={`text-2xl font-bold tracking-tight ${isSelected ? styles.text : 'text-slate-900'}`}>
+                                  ₹{bill.amount.toLocaleString('en-IN')}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100/50">
+                              <div className="flex items-center gap-3">
+                                <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                                  daysLeft < 0 ? 'bg-red-100 text-red-700' : 
+                                  daysLeft < 5 ? 'bg-orange-100 text-orange-700' : 
+                                  'bg-slate-100 text-slate-600'
+                                }`}>
+                                  {dueLabel}
+                                </span>
+                                <span className="text-xs text-slate-400">
+                                  {bill.units} {text.units}
+                                </span>
+                              </div>
+                              
+                              {!isSelected && (
+                                <span className={`text-sm font-semibold ${styles.text} opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1`}>
+                                  Select to Pay <ArrowLeft className="w-4 h-4 rotate-180" />
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Payment Panel */}
+            <div className={`space-y-6 transition-all duration-500 ${selectedBill ? 'opacity-100 translate-x-0' : 'opacity-50 translate-x-4 grayscale'}`}>
+              <div className="sticky top-8">
+                {selectedBillData ? (() => {
+                  const styles = getServiceStyles(selectedBillData.type);
+                  return (
+                    <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
+                      <div className="flex items-center gap-2 text-slate-800 mb-2">
+                        <CreditCard className="w-5 h-5" />
+                        <h3 className="text-lg font-semibold">Payment Details</h3>
+                      </div>
+                      
+                      {/* Bill Summary */}
+                      <Card className={`border shadow-lg overflow-hidden ${styles.border}`}>
+                        <div className={`h-2 w-full ${styles.button}`}></div>
+                        <CardHeader className={`${styles.bg} border-b ${styles.border} pb-4`}>
+                          <CardTitle className={`text-lg flex justify-between items-center ${styles.text}`}>
+                            <span>Bill Summary</span>
+                            <span className="text-sm font-normal px-2 py-1 bg-white/50 rounded-md border border-black/5">
+                              {selectedBillData.consumerId}
+                            </span>
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4 pt-6">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="p-3 bg-slate-50 rounded-lg">
+                              <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">{text.billDate}</p>
+                              <p className="font-medium text-slate-900">{new Date(selectedBillData.billDate).toLocaleDateString()}</p>
+                            </div>
+                            <div className="p-3 bg-slate-50 rounded-lg">
+                              <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">{text.dueDate}</p>
+                              <p className="font-medium text-slate-900">{new Date(selectedBillData.dueDate).toLocaleDateString()}</p>
+                            </div>
+                          </div>
+                          
+                          <div className={`flex justify-between items-end py-4 px-5 rounded-xl border-2 ${styles.border} ${styles.highlight}`}>
+                            <span className="text-slate-600 font-medium mb-1">{text.amount}</span>
+                            <span className={`text-3xl font-bold ${styles.text}`}>₹{selectedBillData.amount.toLocaleString('en-IN')}</span>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Payment Method */}
+                      <Card className="border-slate-200 shadow-md">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-base text-slate-700">{text.selectPayment}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          {[
+                            { id: 'upi', label: text.upi, icon: Smartphone },
+                            { id: 'card', label: text.card, icon: CreditCard },
+                            { id: 'netbanking', label: text.netbanking, icon: Building }
+                          ].map((method) => (
+                            <div
+                              key={method.id}
+                              className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                                paymentMethod === method.id
+                                  ? `${styles.borderActive} ${styles.bg} shadow-sm`
+                                  : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                              }`}
+                              onClick={() => setPaymentMethod(method.id)}
+                            >
+                              <div className={`p-2 rounded-lg ${paymentMethod === method.id ? 'bg-white' : 'bg-slate-100'}`}>
+                                <method.icon className={`w-5 h-5 ${paymentMethod === method.id ? styles.text : 'text-slate-500'}`} />
+                              </div>
+                              <span className={`font-medium ${paymentMethod === method.id ? styles.text : 'text-slate-700'}`}>
+                                {method.label}
+                              </span>
+                              {paymentMethod === method.id && (
+                                <div className={`ml-auto w-4 h-4 rounded-full ${styles.button} flex items-center justify-center`}>
+                                  <CheckCircle className="w-3 h-3 text-white" />
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </CardContent>
+                      </Card>
+
+                      {/* Action Button */}
+                      <Button 
+                        size="lg" 
+                        className={`w-full h-14 text-lg shadow-lg hover:shadow-xl transition-all ${styles.button} ${!paymentMethod ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        onClick={handlePayment}
+                        disabled={!paymentMethod || processing}
+                      >
+                        {processing ? (
+                          <>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            {text.processing}
+                          </>
+                        ) : (
+                          text.payNow
+                        )}
+                      </Button>
+                    </div>
+                  );
+                })() : (
+                  <div className="h-full flex flex-col items-center justify-center text-slate-300 py-20 border-2 border-dashed border-slate-200 rounded-2xl">
+                    <ArrowLeft className="w-12 h-12 mb-4 opacity-20" />
+                    <p className="text-lg">Select a bill from the left to view details</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="history">
+          <Card className="border-slate-200 shadow-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <History className="w-5 h-5" />
+                Payment History
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {bills.filter(b => b.status === 'paid').length > 0 ? (
+                <div className="space-y-4">
+                  {bills.filter(b => b.status === 'paid').map((bill) => {
+                     const styles = getServiceStyles(bill.type);
+                     return (
+                      <div key={bill.id} className="flex items-center justify-between p-4 border border-slate-100 rounded-lg hover:bg-slate-50 transition-colors">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${styles.iconBg}`}>
+                            {React.createElement(getIcon(bill.type), { className: `w-5 h-5 ${styles.iconText}` })}
+                          </div>
+                          <div>
+                            <p className="font-medium text-slate-900">{getTypeLabel(bill.type)} Bill</p>
+                            <p className="text-sm text-slate-500">Paid on {new Date().toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-slate-900">₹{bill.amount.toLocaleString('en-IN')}</p>
+                          <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">Paid Successfully</span>
+                        </div>
+                      </div>
+                     );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-slate-500">
+                  <p>No payment history available yet.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

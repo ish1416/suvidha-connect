@@ -209,11 +209,11 @@ export const civicAlerts: CivicAlert[] = [
     type: 'maintenance',
     title: 'Scheduled Power Maintenance',
     titleHindi: 'निर्धारित बिजली रखरखाव',
-    message: 'Power supply will be interrupted in Sectors 4-8 on Feb 5, 2026 from 10 AM to 2 PM for maintenance work.',
-    messageHindi: 'रखरखाव कार्य के लिए 5 फरवरी, 2026 को सेक्टर 4-8 में सुबह 10 बजे से दोपहर 2 बजे तक बिजली आपूर्ति बाधित रहेगी।',
+    message: 'Power supply will be interrupted in Sectors 4-8 on Feb 5, 2030 from 10 AM to 2 PM for maintenance work.',
+    messageHindi: 'रखरखाव कार्य के लिए 5 फरवरी, 2030 को सेक्टर 4-8 में सुबह 10 बजे से दोपहर 2 बजे तक बिजली आपूर्ति बाधित रहेगी।',
     severity: 'warning',
     createdAt: '2026-02-01T00:00:00Z',
-    expiresAt: '2026-02-05T14:00:00Z',
+    expiresAt: '2030-02-05T14:00:00Z',
     zones: ['Sector 4', 'Sector 5', 'Sector 6', 'Sector 7', 'Sector 8']
   },
   {
@@ -225,7 +225,7 @@ export const civicAlerts: CivicAlert[] = [
     messageHindi: 'अगले 48 घंटों में भारी वर्षा की संभावना है। नागरिकों को घर के अंदर रहने और जलभराव वाले क्षेत्रों से बचने की सलाह दी जाती है।',
     severity: 'warning',
     createdAt: '2026-02-02T06:00:00Z',
-    expiresAt: '2026-02-04T06:00:00Z',
+    expiresAt: '2030-02-04T06:00:00Z',
     zones: ['All Zones']
   },
   {
@@ -237,7 +237,7 @@ export const civicAlerts: CivicAlert[] = [
     messageHindi: 'आपातकालीन मरम्मत के बाद सेक्टर 12 में गैस आपूर्ति बहाल हो गई है।',
     severity: 'info',
     createdAt: '2026-02-02T14:00:00Z',
-    expiresAt: '2026-02-03T14:00:00Z',
+    expiresAt: '2030-02-03T14:00:00Z',
     zones: ['Sector 12']
   },
   {
@@ -249,7 +249,7 @@ export const civicAlerts: CivicAlert[] = [
     messageHindi: 'गंभीर: निचले इलाकों में अचानक बाढ़ की खबर है। तुरंत ऊंचे स्थानों पर जाएं।',
     severity: 'critical',
     createdAt: '2026-02-06T00:00:00Z',
-    expiresAt: '2026-02-07T00:00:00Z',
+    expiresAt: '2030-02-07T00:00:00Z',
     zones: ['Low-lying Areas']
   }
 ];

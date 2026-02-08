@@ -153,31 +153,31 @@ const ComplaintModule: React.FC<ComplaintModuleProps> = ({ onBack }) => {
   // Success Screen
   if (complaintId) {
     return (
-      <div className="p-8 max-w-2xl mx-auto">
-        <Card className="border-2 border-accent shadow-xl">
+      <div className="p-8 max-w-2xl mx-auto animate-in fade-in zoom-in duration-300">
+        <Card className="border border-blue-100 shadow-xl">
           <CardContent className="p-8 text-center">
-            <div className="w-20 h-20 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-12 h-12 text-accent" />
+            <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-6 border border-blue-100">
+              <CheckCircle className="w-12 h-12 text-blue-600" />
             </div>
-            <h2 className="text-3xl font-bold text-accent mb-2">{text.success}</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">{text.success}</h2>
             
-            <div className="bg-muted p-6 rounded-lg my-6">
-              <p className="text-sm text-muted-foreground mb-2">{text.complaintId}</p>
-              <p className="text-3xl font-mono font-bold text-primary">{complaintId}</p>
+            <div className="bg-slate-50 p-6 rounded-lg my-6 border border-slate-200">
+              <p className="text-sm text-slate-500 mb-2">{text.complaintId}</p>
+              <p className="text-3xl font-mono font-bold text-blue-700">{complaintId}</p>
             </div>
 
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mb-6">
-              <Shield className="w-4 h-4 text-accent" />
+            <div className="flex items-center justify-center gap-2 text-sm text-slate-500 mb-6 bg-blue-50/50 p-2 rounded-full w-fit mx-auto px-4">
+              <Shield className="w-4 h-4 text-blue-600" />
               <span>{text.securityNote}</span>
             </div>
 
-            <p className="text-muted-foreground mb-8">{text.trackNote}</p>
+            <p className="text-slate-600 mb-8">{text.trackNote}</p>
 
             <div className="flex gap-4">
-              <Button className="flex-1 h-14" variant="secondary" onClick={resetForm}>
+              <Button className="flex-1 h-14 bg-white text-slate-700 border border-slate-300 hover:bg-slate-50" variant="secondary" onClick={resetForm}>
                 {text.newComplaint}
               </Button>
-              <Button className="flex-1 h-14" onClick={onBack}>
+              <Button className="flex-1 h-14 bg-blue-600 hover:bg-blue-700 text-white" onClick={onBack}>
                 {text.backToHome}
               </Button>
             </div>
@@ -191,43 +191,41 @@ const ComplaintModule: React.FC<ComplaintModuleProps> = ({ onBack }) => {
     <div className="p-8">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-        <Button variant="ghost" size="icon" onClick={onBack} className="h-12 w-12">
+        <Button variant="ghost" size="icon" onClick={onBack} className="h-12 w-12 rounded-full hover:bg-blue-50 text-blue-600">
           <ArrowLeft className="w-6 h-6" />
         </Button>
         <div>
-          <h2 className="text-2xl font-bold">{text.title}</h2>
-          <p className="text-muted-foreground">{text.subtitle}</p>
+          <h2 className="text-2xl font-bold text-slate-900">{text.title}</h2>
+          <p className="text-slate-500">{text.subtitle}</p>
         </div>
       </div>
 
       <div className="max-w-3xl mx-auto">
-        <Card>
+        <Card className="border-slate-200 shadow-sm">
           <CardContent className="p-8 space-y-6">
             {/* Category Selection */}
             <div className="space-y-3">
-              <label className="text-sm font-medium">{text.category} *</label>
+              <label className="text-sm font-medium text-slate-700">{text.category} *</label>
               <div className="grid grid-cols-2 gap-4">
                 {Object.entries(complaintCategories).map(([key, labels]) => {
                   const Icon = categoryIcons[key];
+                  const isSelected = category === key;
                   return (
                     <div
                       key={key}
                       className={`p-4 rounded-lg border-2 cursor-pointer transition-all flex items-center gap-4 ${
-                        category === key
-                          ? 'border-primary bg-primary/5'
-                          : 'border-border hover:border-primary/50'
+                        isSelected
+                          ? 'border-blue-500 bg-blue-50/50 shadow-sm'
+                          : 'border-slate-200 hover:border-blue-300 hover:bg-slate-50'
                       }`}
                       onClick={() => setCategory(key)}
                     >
                       <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                        key === 'power_outage' ? 'bg-yellow-100 text-yellow-600' :
-                        key === 'gas_leakage' ? 'bg-orange-100 text-orange-600' :
-                        key === 'water_supply' ? 'bg-blue-100 text-blue-600' :
-                        'bg-green-100 text-green-600'
+                        isSelected ? 'bg-white text-blue-600 shadow-sm' : 'bg-slate-100 text-slate-600'
                       }`}>
                         <Icon className="w-6 h-6" />
                       </div>
-                      <span className="font-medium">{labels[language]}</span>
+                      <span className={`font-medium ${isSelected ? 'text-blue-900' : 'text-slate-700'}`}>{labels[language]}</span>
                     </div>
                   );
                 })}
@@ -236,37 +234,37 @@ const ComplaintModule: React.FC<ComplaintModuleProps> = ({ onBack }) => {
 
             {/* Description */}
             <div className="space-y-3">
-              <label className="text-sm font-medium">{text.description} *</label>
+              <label className="text-sm font-medium text-slate-700">{text.description} *</label>
               <Textarea
                 placeholder={text.descriptionPlaceholder}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="min-h-32 text-base"
+                className="min-h-32 text-base border-slate-300 focus:border-blue-500 focus:ring-blue-500"
               />
-              <p className="text-xs text-muted-foreground">{description.length}/500 characters</p>
+              <p className="text-xs text-slate-500">{description.length}/500 characters</p>
             </div>
 
             {/* Location */}
             <div className="space-y-3">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
+              <label className="text-sm font-medium flex items-center gap-2 text-slate-700">
+                <MapPin className="w-4 h-4 text-blue-600" />
                 {text.location} *
               </label>
               <Input
                 placeholder={text.locationPlaceholder}
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="h-14 text-base"
+                className="h-14 text-base border-slate-300 focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
 
             {/* Attachments */}
             <div className="space-y-3">
-              <label className="text-sm font-medium">{text.attachments}</label>
+              <label className="text-sm font-medium text-slate-700">{text.attachments}</label>
               <div className="flex flex-wrap gap-3">
                 {attachments.map((file, idx) => (
-                  <div key={idx} className="px-4 py-2 bg-muted rounded-lg text-sm flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-accent" />
+                  <div key={idx} className="px-4 py-2 bg-blue-50 text-blue-700 border border-blue-100 rounded-lg text-sm flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-blue-600" />
                     {file}
                   </div>
                 ))}
@@ -274,7 +272,7 @@ const ComplaintModule: React.FC<ComplaintModuleProps> = ({ onBack }) => {
                   variant="outline"
                   onClick={handleFileUpload}
                   disabled={uploading}
-                  className="h-12"
+                  className="h-12 border-slate-300 hover:bg-slate-50 text-slate-700"
                 >
                   {uploading ? (
                     <Loader2 className="w-5 h-5 animate-spin mr-2" />
@@ -287,14 +285,14 @@ const ComplaintModule: React.FC<ComplaintModuleProps> = ({ onBack }) => {
             </div>
 
             {/* Fraud Prevention Notice */}
-            <div className="flex items-center gap-2 p-3 bg-secondary/10 rounded-lg text-sm text-muted-foreground">
-              <AlertTriangle className="w-4 h-4 text-secondary" />
+            <div className="flex items-center gap-2 p-3 bg-blue-50/50 border border-blue-100 rounded-lg text-sm text-slate-600">
+              <AlertTriangle className="w-4 h-4 text-blue-500" />
               {text.fraudPrevention}
             </div>
 
             {/* Submit Button */}
             <Button
-              className="w-full h-16 text-xl"
+              className="w-full h-16 text-xl bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all"
               disabled={!category || !description || !location || submitting}
               onClick={handleSubmit}
             >

@@ -75,12 +75,12 @@ const AlertTicker: React.FC = () => {
 
   // Determine global severity for the ticker bar background
   const hasCritical = activeAlerts.some(a => a.severity === 'critical');
-  const tickerBg = hasCritical ? 'bg-red-950/90 border-b border-red-500' : 'bg-primary/95 border-b border-primary-foreground/20';
+  const tickerBg = hasCritical ? 'bg-red-600/95 border-b border-red-500' : 'bg-blue-900/95 border-b border-blue-800';
 
   return (
     <div className={`alert-ticker overflow-hidden sticky top-16 z-40 backdrop-blur-sm ${tickerBg} text-white shadow-md`}>
       <div className="flex items-center gap-3 px-4 py-3">
-        <span className={`text-xs font-bold uppercase tracking-wider shrink-0 px-2 py-1 rounded ${hasCritical ? 'bg-red-600 text-white animate-bounce' : 'bg-white/20 text-white'}`}>
+        <span className={`text-xs font-bold uppercase tracking-wider shrink-0 px-2 py-1 rounded ${hasCritical ? 'bg-white text-red-700 animate-pulse' : 'bg-white/20 text-white'}`}>
           {language === 'en' ? '📢 ALERTS' : '📢 अलर्ट'}
         </span>
         <div className="overflow-hidden flex-1 group">
@@ -88,7 +88,7 @@ const AlertTicker: React.FC = () => {
             {activeAlerts.map((alert, index) => (
               <div
                 key={alert.id}
-                className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm shrink-0 ${getSeverityClass(alert.severity)}`}
+                className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm shrink-0 bg-black/20 border border-white/10`}
               >
                 {getIcon(alert.type)}
                 <span className="font-medium">
@@ -105,7 +105,7 @@ const AlertTicker: React.FC = () => {
             {activeAlerts.map((alert) => (
               <div
                 key={`${alert.id}-dup`}
-                className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm shrink-0 ${getSeverityClass(alert.severity)}`}
+                className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm shrink-0 bg-black/20 border border-white/10`}
               >
                 {getIcon(alert.type)}
                 <span className="font-medium">
@@ -127,20 +127,20 @@ const AlertTicker: React.FC = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              className={`shrink-0 h-7 text-xs font-medium ml-2 border-l pl-3 hover:bg-white/10 ${hasCritical ? 'text-white border-red-400' : 'text-white/90 border-white/30'}`}
+              className={`shrink-0 h-7 text-xs font-medium ml-2 border-l pl-3 hover:bg-white/10 text-white border-white/30`}
             >
               {language === 'en' ? 'View All' : 'सभी देखें'}
               <ChevronRight className="w-3 h-3 ml-1" />
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col p-0 gap-0 bg-background/95 backdrop-blur-xl border-slate-700">
-            <DialogHeader className="p-6 pb-2 border-b border-border/50">
+            <DialogHeader className="p-6 pb-2 border-b border-border/50 bg-slate-50">
               <div className="flex items-center justify-between">
-                <DialogTitle className="flex items-center gap-2 text-xl">
+                <DialogTitle className="flex items-center gap-2 text-xl text-blue-900">
                   <span className="text-2xl">📢</span>
                   {language === 'en' ? 'Active Alerts & Notifications' : 'सक्रिय अलर्ट और सूचनाएं'}
                 </DialogTitle>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">
+                <div className="flex items-center gap-2 text-xs text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
                   <Clock className="w-3 h-3" />
                   {new Date().toLocaleString(language === 'en' ? 'en-IN' : 'hi-IN', { 
                     weekday: 'short', 
@@ -152,42 +152,40 @@ const AlertTicker: React.FC = () => {
             </DialogHeader>
             
             <Tabs defaultValue="all" className="flex-1 flex flex-col overflow-hidden">
-              <div className="px-6 pt-4">
-                <TabsList className="grid w-full grid-cols-4 bg-muted/50">
-                  <TabsTrigger value="all">{language === 'en' ? 'All' : 'सभी'}</TabsTrigger>
-                  <TabsTrigger value="critical" className="data-[state=active]:bg-red-100 data-[state=active]:text-red-900 dark:data-[state=active]:bg-red-900/40 dark:data-[state=active]:text-red-100">
+              <div className="px-6 pt-4 bg-slate-50/50">
+                <TabsList className="grid w-full grid-cols-4 bg-white border border-slate-200">
+                  <TabsTrigger value="all" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">{language === 'en' ? 'All' : 'सभी'}</TabsTrigger>
+                  <TabsTrigger value="critical" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                     {language === 'en' ? 'Critical' : 'गंभीर'}
                   </TabsTrigger>
-                  <TabsTrigger value="warning" className="data-[state=active]:bg-yellow-100 data-[state=active]:text-yellow-900 dark:data-[state=active]:bg-yellow-900/40 dark:data-[state=active]:text-yellow-100">
+                  <TabsTrigger value="warning" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                     {language === 'en' ? 'Warning' : 'चेतावनी'}
                   </TabsTrigger>
-                  <TabsTrigger value="maintenance" className="data-[state=active]:bg-orange-100 data-[state=active]:text-orange-900 dark:data-[state=active]:bg-orange-900/40 dark:data-[state=active]:text-orange-100">
+                  <TabsTrigger value="maintenance" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
                     {language === 'en' ? 'Maint.' : 'रखरखाव'}
                   </TabsTrigger>
                 </TabsList>
               </div>
 
               {['all', 'critical', 'warning', 'maintenance'].map((tabValue) => (
-                <TabsContent key={tabValue} value={tabValue} className="flex-1 p-0 m-0 overflow-hidden">
+                <TabsContent key={tabValue} value={tabValue} className="flex-1 p-0 m-0 overflow-hidden bg-slate-50/30">
                   <ScrollArea className="h-full p-6 pt-2">
                     <div className="space-y-4 mt-2">
                       {getFilteredAlerts(tabValue).length > 0 ? (
                         getFilteredAlerts(tabValue).map((alert) => (
                           <div 
                             key={alert.id} 
-                            className={`p-4 rounded-xl border-l-4 shadow-sm transition-all hover:shadow-md ${
-                              alert.severity === 'critical' ? 'bg-red-50 border-l-red-600 dark:bg-red-950/30' :
-                              alert.severity === 'warning' ? 'bg-yellow-50 border-l-yellow-500 dark:bg-yellow-950/30' :
-                              alert.type === 'maintenance' ? 'bg-orange-50 border-l-orange-500 dark:bg-orange-950/30' :
-                              'bg-blue-50 border-l-blue-500 dark:bg-blue-950/30'
+                            className={`p-4 rounded-xl border shadow-sm transition-all hover:shadow-md bg-white ${
+                              alert.severity === 'critical' ? 'border-red-200 hover:border-red-400' :
+                              alert.severity === 'warning' ? 'border-orange-200 hover:border-orange-400' :
+                              'border-blue-200 hover:border-blue-400'
                             }`}
                           >
                             <div className="flex items-start gap-3">
                               <div className={`mt-1 p-2 rounded-full shrink-0 ${
-                                alert.severity === 'critical' ? 'bg-red-100 text-red-600' :
-                                alert.severity === 'warning' ? 'bg-yellow-100 text-yellow-600' :
-                                alert.type === 'maintenance' ? 'bg-orange-100 text-orange-600' :
-                                'bg-blue-100 text-blue-600'
+                                alert.severity === 'critical' ? 'bg-red-50 text-red-600' :
+                                alert.severity === 'warning' ? 'bg-orange-50 text-orange-600' :
+                                'bg-blue-50 text-blue-600'
                               }`}>
                                 {getIcon(alert.type)}
                               </div>
