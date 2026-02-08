@@ -18,7 +18,7 @@ interface ComplaintModuleProps {
 }
 
 const ComplaintModule: React.FC<ComplaintModuleProps> = ({ onBack }) => {
-  const { language, citizen } = useAuth();
+  const { language, citizen, updateCitizen } = useAuth();
   const { submitComplaint } = useKiosk();
   
   const [category, setCategory] = useState<string>('');
@@ -127,7 +127,14 @@ const ComplaintModule: React.FC<ComplaintModuleProps> = ({ onBack }) => {
       });
       
       setComplaintId(id);
-      toast.success(text.success);
+      
+      // Award Suvidha Points for civic engagement
+      if (citizen && updateCitizen) {
+        updateCitizen({ points: (citizen.points || 0) + 30 });
+        toast.success(`${text.success} (+30 Points)`);
+      } else {
+        toast.success(text.success);
+      }
     } catch (error) {
       toast.error(language === 'en' ? 'Failed to submit complaint' : 'शिकायत दर्ज करने में विफल');
     } finally {

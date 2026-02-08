@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Bot, User, ChevronDown, Sparkles, Mic, Loader2, AlertTriangle } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, User, ChevronDown, Sparkles, Mic, Loader2, AlertTriangle, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -21,7 +21,7 @@ interface ChatAssistantProps {
   onNavigate: (module: string) => void;
 }
 
-// Simple intent matching database
+// Expanded intent matching database
 const INTENTS = [
   {
     keywords: ['bill', 'pay', 'electricity', 'water', 'gas', 'due', 'amount'],
@@ -32,7 +32,7 @@ const INTENTS = [
     action: { label: { en: 'Pay Bills', hi: 'बिल भरें' }, module: 'bills' }
   },
   {
-    keywords: ['complaint', 'issue', 'problem', 'report', 'broken', 'garbage', 'pothole', 'street light'],
+    keywords: ['complaint', 'issue', 'problem', 'report', 'broken', 'garbage', 'pothole', 'street light', 'shikayat'],
     response: {
       en: "I can help you file a grievance regarding civic issues like potholes, streetlights, or sanitation. Would you like to report an issue?",
       hi: "मैं आपको गड्ढों, स्ट्रीटलाइट्स या सफाई जैसे नागरिक मुद्दों के बारे में शिकायत दर्ज करने में मदद कर सकता हूँ। क्या आप कोई समस्या रिपोर्ट करना चाहेंगे?"
@@ -56,7 +56,7 @@ const INTENTS = [
     action: { label: { en: 'Documents', hi: 'दस्तावेज़' }, module: 'documents' }
   },
   {
-    keywords: ['hello', 'hi', 'namaste', 'greetings', 'hey'],
+    keywords: ['hello', 'hi', 'namaste', 'greetings', 'hey', 'start'],
     response: {
       en: "Namaste! I am SUVIDHA Sahayak. How can I assist you with your civic needs today?",
       hi: "नमस्ते! मैं सुविधा सहायक हूँ। आज मैं आपकी नागरिक आवश्यकताओं में कैसे सहायता कर सकता हूँ?"
@@ -70,13 +70,27 @@ const INTENTS = [
     }
   },
   {
-    keywords: ['emergency', 'fire', 'ambulance', 'police', 'help', 'danger'],
+    keywords: ['emergency', 'fire', 'ambulance', 'police', 'help', 'danger', 'accident'],
     response: {
       en: "EMERGENCY ALERT: If this is a life-threatening emergency, please call 112 immediately. I can show you emergency contacts.",
       hi: "आपातकालीन चेतावनी: यदि यह जीवन के लिए खतरा है, तो कृपया तुरंत 112 पर कॉल करें। मैं आपको आपातकालीन संपर्क दिखा सकता हूँ।"
     },
     isEmergency: true,
     action: { label: { en: 'View Alerts', hi: 'अलर्ट देखें' }, module: 'alerts' }
+  },
+  {
+    keywords: ['time', 'hour', 'open', 'close', 'office'],
+    response: {
+      en: "Government offices are generally open from 9:30 AM to 6:00 PM, Monday to Saturday (except second and fourth Saturdays).",
+      hi: "सरकारी कार्यालय आमतौर पर सोमवार से शनिवार (दूसरे और चौथे शनिवार को छोड़कर) सुबह 9:30 बजे से शाम 6:00 बजे तक खुले रहते हैं।"
+    }
+  },
+  {
+    keywords: ['aadhaar', 'uidai', 'id', 'card'],
+    response: {
+      en: "For Aadhaar related services, please visit the nearest Aadhaar Seva Kendra. We can only assist with linking Aadhaar to municipal services.",
+      hi: "आधार संबंधित सेवाओं के लिए, कृपया निकटतम आधार सेवा केंद्र पर जाएं। हम केवल नगरपालिका सेवाओं के साथ आधार को लिंक करने में सहायता कर सकते हैं।"
+    }
   }
 ];
 
@@ -86,19 +100,48 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ onNavigate }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { t, i18n } = useTranslation();
   const { citizen } = useAuth();
   
+  // Speak text using Web Speech API
+  const speak = (text: string) => {
+    if (isMuted) return;
+    
+    // Cancel any current speech
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    // Try to find a suitable voice
+    const voices = window.speechSynthesis.getVoices();
+    
+    if (i18n.language === 'hi') {
+      utterance.lang = 'hi-IN';
+      const hindiVoice = voices.find(v => v.lang.includes('hi'));
+      if (hindiVoice) utterance.voice = hindiVoice;
+    } else {
+      utterance.lang = 'en-IN'; // Indian English preferred
+      const indianVoice = voices.find(v => v.lang.includes('IN') || v.lang.includes('Indian'));
+      if (indianVoice) utterance.voice = indianVoice;
+    }
+    
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    window.speechSynthesis.speak(utterance);
+  };
+
   // Initial greeting
   useEffect(() => {
     if (messages.length === 0) {
+      const greetingText = i18n.language === 'en' 
+        ? `Namaste ${citizen?.name || 'Citizen'}! I am your SUVIDHA Assistant. How can I help you today?`
+        : `नमस्ते ${citizen?.name || 'नागरिक'}! मैं आपका सुविधा सहायक हूँ। मैं आपकी कैसे मदद कर सकता हूँ?`;
+
       setMessages([
         {
           id: 'welcome',
-          text: i18n.language === 'en' 
-            ? `Namaste ${citizen?.name || 'Citizen'}! I am your SUVIDHA Assistant. How can I help you today?`
-            : `नमस्ते ${citizen?.name || 'नागरिक'}! मैं आपका सुविधा सहायक हूँ। मैं आपकी कैसे मदद कर सकता हूँ?`,
+          text: greetingText,
           sender: 'bot',
           timestamp: new Date(),
           actions: [
@@ -108,6 +151,9 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ onNavigate }) => {
           ]
         }
       ]);
+      
+      // Don't auto-speak welcome message to avoid noise pollution, or maybe delay it?
+      // speak(greetingText); 
     }
   }, [citizen, i18n.language]);
 
@@ -137,6 +183,7 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ onNavigate }) => {
       const response = generateResponse(userMsg.text);
       setMessages(prev => [...prev, response]);
       setIsTyping(false);
+      speak(response.text);
     }, 1000 + Math.random() * 500);
   };
 
@@ -172,6 +219,7 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ onNavigate }) => {
             const response = generateResponse(transcript);
             setMessages(prev => [...prev, response]);
             setIsTyping(false);
+            speak(response.text);
           }, 1500);
         }, 500);
       };
@@ -246,9 +294,20 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ onNavigate }) => {
                 </p>
               </div>
             </div>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20" onClick={() => setIsOpen(false)}>
-              <ChevronDown className="w-5 h-5" />
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 text-white hover:bg-white/20" 
+                onClick={() => setIsMuted(!isMuted)}
+                title={isMuted ? "Unmute TTS" : "Mute TTS"}
+              >
+                {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-white hover:bg-white/20" onClick={() => setIsOpen(false)}>
+                <ChevronDown className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
 
           {/* Messages Area */}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -16,6 +17,7 @@ interface WasteModuleProps {
 
 const WasteModule: React.FC<WasteModuleProps> = ({ onBack }) => {
   const { t } = useTranslation();
+  const { citizen, updateCitizen } = useAuth();
   const [activeTab, setActiveTab] = useState('schedule');
   const [processing, setProcessing] = useState(false);
   const [success, setSuccess] = useState<{
@@ -33,7 +35,13 @@ const WasteModule: React.FC<WasteModuleProps> = ({ onBack }) => {
         id: 'W-' + Math.floor(Math.random() * 10000),
         details: 'Pickup scheduled for tomorrow morning'
       });
-      toast.success(t('waste.schedule_success') || 'Pickup Scheduled Successfully!');
+      
+      if (citizen && updateCitizen) {
+        updateCitizen({ points: (citizen.points || 0) + 15 });
+        toast.success(t('waste.schedule_success') + ' (+15 Points)' || 'Pickup Scheduled Successfully! (+15 Points)');
+      } else {
+        toast.success(t('waste.schedule_success') || 'Pickup Scheduled Successfully!');
+      }
     }, 2000);
   };
 
@@ -46,7 +54,13 @@ const WasteModule: React.FC<WasteModuleProps> = ({ onBack }) => {
         id: 'TXN-' + Math.floor(Math.random() * 100000),
         details: 'Monthly waste collection fee paid'
       });
-      toast.success(t('waste.payment_success') || 'Payment Successful!');
+
+      if (citizen && updateCitizen) {
+        updateCitizen({ points: (citizen.points || 0) + 20 });
+        toast.success(t('waste.payment_success') + ' (+20 Points)' || 'Payment Successful! (+20 Points)');
+      } else {
+        toast.success(t('waste.payment_success') || 'Payment Successful!');
+      }
     }, 2000);
   };
 

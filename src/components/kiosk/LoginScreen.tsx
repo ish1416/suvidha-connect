@@ -192,9 +192,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
                 </Button>
               ) : (
                 <>
-                  <div className="flex items-center gap-3 text-green-700 p-4 bg-green-50 rounded-xl border border-green-100">
-                    <CheckCircle className="w-5 h-5 flex-shrink-0" />
-                    <span className="text-sm font-medium">{text.otpSent}</span>
+                  <div className="flex items-center justify-between gap-3 text-green-700 p-4 bg-green-50 rounded-xl border border-green-100">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                      <div>
+                        <p className="text-sm font-medium">{text.otpSent}</p>
+                        <p className="text-xs text-green-600 mt-0.5 font-mono tracking-wide">+91 {mobile}</p>
+                      </div>
+                    </div>
+                    <Button variant="link" size="sm" onClick={() => setOtpSent(false)} className="text-green-700 h-auto p-0 text-xs">
+                       Change
+                    </Button>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-slate-700 ml-1">{text.enterOtp}</label>

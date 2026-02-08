@@ -11,11 +11,13 @@ import TrackStatusModule from './TrackStatusModule';
 import DocumentsModule from './DocumentsModule';
 import AlertsModule from './AlertsModule';
 import WasteModule from './WasteModule';
+import AppointmentModule from './AppointmentModule';
+import RewardsModule from './RewardsModule';
 import VoiceCommander from './VoiceCommander';
 import ChatAssistant from './ChatAssistant';
 import { useAuth } from '@/context/AuthContext';
 
-type ModuleType = 'home' | 'bills' | 'complaint' | 'newService' | 'track' | 'documents' | 'alerts' | 'waste';
+type ModuleType = 'home' | 'bills' | 'complaint' | 'newService' | 'track' | 'documents' | 'alerts' | 'waste' | 'appointment' | 'rewards';
 
 const KioskLayout: React.FC = () => {
   const { isAuthenticated, sessionTimeout } = useAuth();
@@ -82,6 +84,10 @@ const KioskLayout: React.FC = () => {
         return <AlertsModule onBack={handleBack} />;
       case 'waste':
         return <WasteModule onBack={handleBack} />;
+      case 'appointment':
+        return <AppointmentModule onBack={handleBack} />;
+      case 'rewards':
+        return <RewardsModule onBack={handleBack} />;
       default:
         return <ServiceModules onModuleSelect={handleModuleSelect} />;
     }

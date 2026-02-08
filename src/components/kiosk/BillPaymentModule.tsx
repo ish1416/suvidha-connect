@@ -18,7 +18,7 @@ interface BillPaymentModuleProps {
 }
 
 const BillPaymentModule: React.FC<BillPaymentModuleProps> = ({ onBack }) => {
-  const { language, citizen } = useAuth();
+  const { language, citizen, updateCitizen } = useAuth();
   const { bills, payBill } = useKiosk();
   const [selectedBill, setSelectedBill] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
@@ -124,7 +124,14 @@ const BillPaymentModule: React.FC<BillPaymentModuleProps> = ({ onBack }) => {
         amount: result.amount,
         timestamp: result.timestamp
       });
-      toast.success(text.success);
+      
+      // Award Suvidha Points for digital payment
+      if (citizen && updateCitizen) {
+        updateCitizen({ points: (citizen.points || 0) + 20 });
+        toast.success(`${text.success} (+20 Points)`);
+      } else {
+        toast.success(text.success);
+      }
     } else {
       toast.error(language === 'en' ? 'Payment failed. Please try again.' : 'भुगतान विफल. कृपया पुनः प्रयास करें।');
     }

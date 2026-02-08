@@ -11,6 +11,7 @@ interface AuthContextType {
   setLanguage: (lang: 'en' | 'hi') => void;
   sessionTimeout: number;
   resetSessionTimer: () => void;
+  updateCitizen: (data: Partial<Citizen>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,6 +34,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const resetSessionTimer = useCallback(() => {
     setLastActivity(Date.now());
     setSessionTimeout(SESSION_TIMEOUT);
+  }, []);
+
+  const updateCitizen = useCallback((data: Partial<Citizen>) => {
+    setCitizen(prev => prev ? { ...prev, ...data } : null);
   }, []);
 
   // Session timeout logic
@@ -131,7 +136,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logout,
         setLanguage,
         sessionTimeout,
-        resetSessionTimer
+        resetSessionTimer,
+        updateCitizen
       }}
     >
       {children}

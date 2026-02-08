@@ -13,7 +13,9 @@ import {
   Flame,
   Droplets,
   Trash2,
-  Volume2
+  Volume2,
+  Calendar,
+  Trophy
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,7 +25,7 @@ interface ServiceModulesProps {
 }
 
 const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { speak, ttsEnabled } = useKiosk();
 
   const modules = [
@@ -43,11 +45,25 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
       color: 'secondary'
     },
     {
+      id: 'appointment',
+      icon: Calendar,
+      title: i18n.language === 'en' ? 'Book Appointment' : 'अपॉइंटमेंट बुक करें',
+      description: i18n.language === 'en' ? 'Schedule visits to government offices' : 'सरकारी कार्यालयों के लिए समय निर्धारित करें',
+      color: 'accent'
+    },
+    {
+      id: 'rewards',
+      icon: Trophy,
+      title: i18n.language === 'en' ? 'Suvidha Rewards' : 'सुविधा रिवॉर्ड्स',
+      description: i18n.language === 'en' ? 'Earn points & redeem rewards' : 'अंक अर्जित करें और रिवॉर्ड्स पाएं',
+      color: 'secondary'
+    },
+    {
       id: 'newService',
       icon: FilePlus,
       title: t('services.newService.title'),
       description: t('services.newService.description'),
-      color: 'accent'
+      color: 'primary'
     },
     {
       id: 'track',

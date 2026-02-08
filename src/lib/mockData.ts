@@ -8,6 +8,7 @@ export interface Citizen {
   address: string;
   consumerId: string;
   pin: string;
+  points?: number;
 }
 
 export interface Bill {
@@ -100,7 +101,8 @@ export const citizens: Citizen[] = [
     aadhaar: 'XXXX-XXXX-1234',
     address: '123 MG Road, Sector 5, New Delhi',
     consumerId: 'ELEC2024001',
-    pin: '1234'
+    pin: '1234',
+    points: 150
   },
   {
     id: 'CIT002',
@@ -109,7 +111,8 @@ export const citizens: Citizen[] = [
     aadhaar: 'XXXX-XXXX-5678',
     address: '456 Nehru Place, Block B, New Delhi',
     consumerId: 'ELEC2024002',
-    pin: '5678'
+    pin: '5678',
+    points: 50
   }
 ];
 
