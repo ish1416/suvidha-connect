@@ -200,3 +200,32 @@ All colors MUST be HSL.
 .animate-marquee {
   animation: marquee 30s linear infinite;
 }
+
+/* Print Styles */
+@media print {
+  header, footer, .no-print, button, nav {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  .print-page-break {
+    page-break-after: always;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  
+  @page {
+    margin: 2cm;
+  }
+}
