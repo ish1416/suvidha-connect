@@ -169,6 +169,26 @@ All colors MUST be HSL.
     @apply bg-background text-foreground font-sans;
   }
   
+  /* Focus indicators for accessibility */
+  *:focus-visible {
+    outline: 3px solid hsl(var(--primary));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  
+  button:focus-visible,
+  a:focus-visible {
+    outline: 3px solid hsl(var(--primary));
+    outline-offset: 3px;
+  }
+  
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 1px;
+  }
+  
   /* High contrast specific borders for better definition */
   .high-contrast * {
     @apply border-black;
