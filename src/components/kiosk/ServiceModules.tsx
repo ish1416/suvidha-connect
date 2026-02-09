@@ -118,26 +118,26 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Welcome Message */}
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-foreground mb-2">
+      <div className="text-center mb-6 md:mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
           {t('welcome_title')}
         </h2>
-        <p className="text-lg text-muted-foreground">
+        <p className="text-base md:text-lg text-muted-foreground">
           {t('welcome_subtitle')}
         </p>
       </div>
 
       {/* Service Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
         {modules.map((module) => (
           <Card 
             key={module.id}
             className={`cursor-pointer transition-all duration-300 hover:scale-105 hover:-translate-y-1 border shadow-xl ${getColorClasses(module.color)}`}
             onClick={() => onModuleSelect(module.id)}
           >
-            <CardContent className="p-6 flex flex-col items-center text-center h-full justify-center min-h-[220px] relative overflow-hidden group">
+            <CardContent className="p-4 md:p-6 flex flex-col items-center text-center h-full justify-center min-h-[180px] md:min-h-[220px] relative overflow-hidden group">
               {/* Background Pattern */}
               <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 transition-all duration-500 opacity-20 ${
                 module.color === 'primary' ? 'bg-blue-500' : 
@@ -145,9 +145,9 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
                 module.color === 'accent' ? 'bg-green-500' : 'bg-slate-500'
               }`} />
               
-              <div className="mb-5 relative z-10">
-                <div className={`p-4 rounded-2xl shadow-sm ring-1 ring-slate-100 group-hover:scale-110 transition-transform duration-300 group-hover:shadow-md ${getIconColor(module.color)}`}>
-                  <module.icon className="w-12 h-12" />
+              <div className="mb-4 md:mb-5 relative z-10">
+                <div className={`p-3 md:p-4 rounded-2xl shadow-sm ring-1 ring-slate-100 group-hover:scale-110 transition-transform duration-300 group-hover:shadow-md ${getIconColor(module.color)}`}>
+                  <module.icon className="w-10 h-10 md:w-12 md:h-12" />
                 </div>
                 {module.subIcons && (
                   <div className="flex gap-1 absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-white rounded-full px-2 py-0.5 border border-slate-200 shadow-sm">
@@ -161,12 +161,12 @@ const ServiceModules: React.FC<ServiceModulesProps> = ({ onModuleSelect }) => {
                 )}
               </div>
               
-              <h3 className={`text-xl font-bold mb-2 z-10 tracking-tight transition-colors ${
+              <h3 className={`text-lg md:text-xl font-bold mb-2 z-10 tracking-tight transition-colors ${
                 module.color === 'primary' ? 'text-slate-900 group-hover:text-blue-700' : 
                 module.color === 'secondary' ? 'text-slate-900 group-hover:text-orange-700' : 
                 'text-slate-900 group-hover:text-green-700'
               }`}>{module.title}</h3>
-              <p className="text-sm text-slate-600 z-10 leading-relaxed max-w-[90%]">{module.description}</p>
+              <p className="text-xs md:text-sm text-slate-600 z-10 leading-relaxed max-w-[90%]">{module.description}</p>
               
               {ttsEnabled && (
                 <Button
