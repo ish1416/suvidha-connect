@@ -12,7 +12,7 @@ const VirtualKeyboard: React.FC = () => {
       <Button
         variant="outline"
         size="icon"
-        className="fixed bottom-4 right-4 z-50 h-14 w-14 rounded-full shadow-xl border-2 border-primary/20 bg-background/90 backdrop-blur-md hover:bg-primary/10 hover:scale-105 transition-all duration-300"
+        className="fixed bottom-4 left-4 z-50 h-14 w-14 rounded-full shadow-xl border-2 border-primary/20 bg-background/90 backdrop-blur-md hover:bg-primary/10 hover:scale-105 transition-all duration-300"
         onClick={showKeyboard}
         title="Show Virtual Keyboard"
       >
