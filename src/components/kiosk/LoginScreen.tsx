@@ -124,25 +124,25 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center p-4 md:p-8 bg-muted/30 relative overflow-hidden">
+    <div className="min-h-[calc(100vh-140px)] flex items-center justify-center p-8 bg-muted/30 relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute inset-0 z-0 opacity-5">
         <div className="absolute top-0 left-0 w-96 h-96 bg-blue-600 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
       </div>
 
-      <Card className="w-full max-w-lg shadow-2xl border-0 ring-1 ring-black/5 z-10 bg-white/80 backdrop-blur-xl mx-4">
+      <Card className="w-full max-w-lg shadow-2xl border-0 ring-1 ring-black/5 z-10 bg-white/80 backdrop-blur-xl">
         {/* Tricolor Branding Bar */}
         <div className="h-2 w-full bg-[linear-gradient(90deg,#FF9933_0%,#FFFFFF_50%,#138808_100%)]" />
-        <CardHeader className="text-center space-y-2 pb-4 md:pb-6 pt-6 md:pt-8 px-4 md:px-8">
-          <div className="mx-auto w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-primary to-blue-800 flex items-center justify-center mb-3 md:mb-4 shadow-lg ring-4 ring-white">
-            <Shield className="w-8 h-8 md:w-10 md:h-10 text-white" />
+        <CardHeader className="text-center space-y-2 pb-6 pt-8">
+          <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-primary to-blue-800 flex items-center justify-center mb-4 shadow-lg ring-4 ring-white">
+            <Shield className="w-10 h-10 text-white" />
           </div>
           <div className="space-y-1">
             <h2 className="text-xs font-bold text-primary uppercase tracking-[0.2em]">
               {language === 'en' ? 'Government of India' : 'भारत सरकार'}
             </h2>
-            <CardTitle className="text-2xl md:text-3xl font-serif text-slate-800">
+            <CardTitle className="text-3xl font-serif text-slate-800">
               {text.title}
             </CardTitle>
           </div>
@@ -151,20 +151,20 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
           </CardDescription>
         </CardHeader>
         
-        <CardContent className="px-4 md:px-8 pb-6 md:pb-8">
+        <CardContent className="px-8 pb-8">
           <Tabs defaultValue="mobile" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6 md:mb-8 p-1 bg-slate-100/80 rounded-xl">
-              <TabsTrigger value="mobile" className="gap-1 md:gap-2 text-xs md:text-sm py-2 md:py-2.5 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
-                <Smartphone className="w-3 h-3 md:w-4 md:h-4" />
-                <span className="hidden sm:inline">{text.mobileTab}</span>
+            <TabsList className="grid w-full grid-cols-3 mb-8 p-1 bg-slate-100/80 rounded-xl">
+              <TabsTrigger value="mobile" className="gap-2 text-sm py-2.5 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
+                <Smartphone className="w-4 h-4" />
+                {text.mobileTab}
               </TabsTrigger>
-              <TabsTrigger value="consumer" className="gap-1 md:gap-2 text-xs md:text-sm py-2 md:py-2.5 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
-                <CreditCard className="w-3 h-3 md:w-4 md:h-4" />
-                <span className="hidden sm:inline">{text.consumerTab}</span>
+              <TabsTrigger value="consumer" className="gap-2 text-sm py-2.5 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
+                <CreditCard className="w-4 h-4" />
+                {text.consumerTab}
               </TabsTrigger>
-              <TabsTrigger value="qr" className="gap-1 md:gap-2 text-xs md:text-sm py-2 md:py-2.5 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
-                <QrCode className="w-3 h-3 md:w-4 md:h-4" />
-                <span className="hidden sm:inline">{text.qrTab}</span>
+              <TabsTrigger value="qr" className="gap-2 text-sm py-2.5 data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm rounded-lg transition-all">
+                <QrCode className="w-4 h-4" />
+                {text.qrTab}
               </TabsTrigger>
             </TabsList>
 
@@ -176,14 +176,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
                   placeholder={text.enterMobile}
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                  className="text-base md:text-lg h-12 md:h-14 bg-white border-slate-200 focus:border-primary focus:ring-primary/20 transition-all rounded-xl"
+                  className="text-lg h-14 bg-white border-slate-200 focus:border-primary focus:ring-primary/20 transition-all rounded-xl"
                   disabled={otpSent}
                 />
               </div>
               
               {!otpSent ? (
                 <Button 
-                  className="w-full h-12 md:h-14 text-base md:text-lg font-semibold bg-gradient-to-r from-primary to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-900/20 rounded-xl transition-all hover:scale-[1.01]"
+                  className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-900/20 rounded-xl transition-all hover:scale-[1.01]"
                   onClick={handleSendOTP}
                   disabled={loading || mobile.length !== 10}
                 >
@@ -211,11 +211,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
                       placeholder="••••••"
                       value={otp}
                       onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                      className="text-base md:text-lg h-12 md:h-14 text-center tracking-[0.5em] font-mono bg-white border-slate-200 focus:border-primary focus:ring-primary/20 transition-all rounded-xl"
+                      className="text-lg h-14 text-center tracking-[0.5em] font-mono bg-white border-slate-200 focus:border-primary focus:ring-primary/20 transition-all rounded-xl"
                     />
                   </div>
                   <Button 
-                    className="w-full h-12 md:h-14 text-base md:text-lg font-semibold bg-green-600 hover:bg-green-700 shadow-lg shadow-green-900/20 rounded-xl transition-all hover:scale-[1.01]"
+                    className="w-full h-14 text-lg font-semibold bg-green-600 hover:bg-green-700 shadow-lg shadow-green-900/20 rounded-xl transition-all hover:scale-[1.01]"
                     onClick={handleOTPLogin}
                     disabled={loading || otp.length !== 6}
                   >
@@ -234,7 +234,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
                   placeholder={text.enterConsumerId}
                   value={consumerId}
                   onChange={(e) => setConsumerId(e.target.value.toUpperCase())}
-                  className="text-base md:text-lg h-12 md:h-14"
+                  className="text-lg h-14"
                 />
               </div>
               <div className="space-y-2">
@@ -244,12 +244,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
                   placeholder={text.enterPin}
                   value={pin}
                   onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                  className="text-base md:text-lg h-12 md:h-14 text-center tracking-widest"
+                  className="text-lg h-14 text-center tracking-widest"
                   maxLength={4}
                 />
               </div>
               <Button 
-                className="w-full h-12 md:h-14 text-base md:text-lg"
+                className="w-full h-14 text-lg"
                 onClick={handleConsumerLogin}
                 disabled={loading || !consumerId || pin.length !== 4}
               >
@@ -260,12 +260,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccess }) => {
 
             <TabsContent value="qr" className="space-y-4">
               <div className="text-center py-8">
-                <div className="w-32 h-32 md:w-48 md:h-48 mx-auto border-4 border-dashed border-primary/30 rounded-2xl flex items-center justify-center bg-muted/50 mb-4">
-                  <QrCode className="w-16 h-16 md:w-24 md:h-24 text-primary/40" />
+                <div className="w-48 h-48 mx-auto border-4 border-dashed border-primary/30 rounded-2xl flex items-center justify-center bg-muted/50 mb-4">
+                  <QrCode className="w-24 h-24 text-primary/40" />
                 </div>
                 <p className="text-muted-foreground mb-4">{text.qrInstructions}</p>
                 <Button 
-                  className="h-12 md:h-14 px-6 md:px-8 text-base md:text-lg"
+                  className="h-14 px-8 text-lg"
                   onClick={handleQRScan}
                 >
                   {text.scanNow}

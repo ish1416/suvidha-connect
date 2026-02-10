@@ -26,7 +26,7 @@ export const KeyboardProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       }
       
       setActiveInput(input);
-      setIsVisible(true);
+      // setIsVisible(true); // Disabled auto-show
     }
   }, []);
 

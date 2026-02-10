@@ -101,20 +101,20 @@ const KioskLayout: React.FC = () => {
         {renderModule()}
       </main>
       {/* Footer */}
-      <footer className="bg-slate-900 text-slate-300 py-3 md:py-4 px-4 md:px-6 text-center text-xs border-t border-slate-800">
-        <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-2 md:gap-4">
+      <footer className="bg-slate-900 text-slate-300 py-4 px-6 text-center text-xs border-t border-slate-800">
+        <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-4">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="font-mono text-[10px] md:text-xs">SYSTEM ONLINE • v1.0.0</span>
+            <span className="font-mono">SYSTEM ONLINE • v1.0.0</span>
           </div>
-          <div className="flex items-center gap-3 md:gap-6 opacity-80 text-[10px] md:text-xs">
+          <div className="flex items-center gap-6 opacity-80">
             <span>© 2026 SUVIDHA - Govt of India</span>
-            <span className="hidden sm:inline">•</span>
-            <span className="hidden sm:inline">Powered by Smart City Mission</span>
+            <span className="hidden md:inline">•</span>
+            <span>Powered by Smart City Mission</span>
           </div>
-          <div className="flex items-center gap-2 md:gap-4 text-[9px] md:text-[10px] uppercase tracking-wider opacity-60">
+          <div className="flex items-center gap-4 text-[10px] uppercase tracking-wider opacity-60">
              <span>SECURE CONNECTION</span>
-             <span className="hidden md:inline">DPDP COMPLIANT</span>
+             <span>DPDP COMPLIANT</span>
           </div>
         </div>
       </footer>
